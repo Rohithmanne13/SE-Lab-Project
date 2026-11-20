@@ -5,7 +5,7 @@ status: inbox
 tags: [course, requirements, ledger]
 created: 2026-11-20
 author: Manne Rohith Sai
-related: [FR-1, FR-2, FR-3, FR-4, FR-5, SK-5, TQ-1, TQ-2, TQ-3, TQ-4, TQ-5, TQ-6, TQ-SEC, CON-1, CON-2]
+related: [FR-1, FR-2, FR-3, FR-4, FR-5, SK-5, TQ-1, TQ-2, TQ-3, TQ-4, TQ-5, TQ-6, TQ-SEC, CON-1, CON-2, "#4", "PR #18"]
 ---
 
 # Project statement: Financial Ledger & Digital Wallet API
@@ -43,6 +43,8 @@ The course's Project 2 statement. It frames the problem ("the vanishing money gl
 - [[srs-requirements#TQ-SEC|TQ-SEC]]
 - [[srs-requirements#CON-1|CON-1]]
 - [[srs-requirements#CON-2|CON-2]]
+
+Issues / PRs: #4, PR #18
 
 ## Source
 

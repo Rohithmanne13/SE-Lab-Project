@@ -5,7 +5,7 @@ status: inbox
 tags: [second-brain, para, organisation]
 created: 2026-11-20
 author: Manne Rohith Sai
-related: [SB-0, SK-2]
+related: [SB-0, SK-2, "#4", "PR #18"]
 ---
 
 # The PARA method (Tiago Forte)
@@ -33,6 +33,8 @@ Tiago Forte's article "The PARA Method: The Simple System for Organizing Your Di
 
 - [[srs-requirements#SB-0|SB-0]]
 - [[srs-requirements#SK-2|SK-2]]
+
+Issues / PRs: #4, PR #18
 
 ## Source
 

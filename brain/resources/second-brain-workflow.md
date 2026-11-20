@@ -5,7 +5,7 @@ status: distilled
 tags: [second-brain, para, obsidian, process]
 created: 2026-11-20
 author: Manne Rohith Sai
-related: [SB-0, SB-1, SB-2, SB-3, SB-5, SB-6, DR-8, SK-1, SK-2, SK-3, AI-3]
+related: [SB-0, SB-1, SB-2, SB-3, SB-5, SB-6, DR-8, SK-1, SK-2, SK-3, AI-3, "#2", "PR #18"]
 ---
 
 # Second brain workflow
@@ -30,7 +30,7 @@ status: inbox         # inbox | distilled | archived
 tags: [lowercase, words]
 created: 2026-11-20   # YYYY-MM-DD
 author: Manne Rohith Sai   # a Team 007 member (SB-6)
-related: [FR-2, SB-1, #12, PR #15]   # requirement IDs, issues, PRs (SB-1)
+related: [FR-2, SB-1, "#12", "PR #15"]   # requirement IDs, issues, PRs (SB-1); quote # references
 ---
 ```
 
@@ -41,7 +41,7 @@ related: [FR-2, SB-1, #12, PR #15]   # requirement IDs, issues, PRs (SB-1)
 
 - Link notes with wikilinks: `[[note-name]]`, display text with `[[note-name|text]]` ([[obsidian-internal-links]]).
 - Link a requirement as a heading in the requirement index: `[[srs-requirements#FR-2.4|FR-2.4]]`.
-- Reference GitHub issues and PRs in the `related` field and body as `#12` and `PR #15`.
+- Reference GitHub issues and PRs in the `related` field (quoted, e.g. `"#12"`, because an unquoted `#` starts a YAML comment) and in the body as `#12` and `PR #15`.
 - CI (`scripts/ci/validate_brain.py`) fails a pull request on any missing front-matter field or broken link.
 
 ## Lifecycle and skills

@@ -5,7 +5,7 @@ status: distilled
 tags: [ai-session, stage-1, second-brain, ci]
 created: 2026-11-20
 author: Manne Rohith Sai
-related: [SB-0, SB-4, SK-0, SK-1, PR-1, PR-5, TQ-7, AI-1, AI-3]
+related: [SB-0, SB-4, SK-0, SK-1, PR-1, PR-5, TQ-7, AI-1, AI-3, "#2", "#3", "#4", "#5", "#6", "#7", "#8", "#9", "#10", "#11", "PR #18"]
 ---
 
 # AI session 2026-11-20: setting up the Stage 1 deliverables

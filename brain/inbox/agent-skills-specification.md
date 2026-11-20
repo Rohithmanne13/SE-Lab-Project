@@ -5,7 +5,7 @@ status: inbox
 tags: [agent-skills, skills, specification]
 created: 2026-11-20
 author: Manne Rohith Sai
-related: [SK-0, CON-8, PR-5]
+related: [SK-0, CON-8, PR-5, "#4", "PR #18"]
 ---
 
 # Agent Skills format specification
@@ -33,6 +33,8 @@ The Agent Skills format specification (agentskills.io), which the course names a
 - [[srs-requirements#SK-0|SK-0]]
 - [[srs-requirements#CON-8|CON-8]]
 - [[srs-requirements#PR-5|PR-5]]
+
+Issues / PRs: #4, PR #18
 
 ## Source
 

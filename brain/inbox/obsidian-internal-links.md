@@ -5,7 +5,7 @@ status: inbox
 tags: [obsidian, links, second-brain]
 created: 2026-11-20
 author: Manne Rohith Sai
-related: [SB-1, SK-2, PR-5]
+related: [SB-1, SK-2, PR-5, "#4", "PR #18"]
 ---
 
 # Obsidian internal links
@@ -34,6 +34,8 @@ Obsidian Help, "Internal links": how Obsidian links notes, headings, blocks and 
 - [[srs-requirements#SB-1|SB-1]]
 - [[srs-requirements#SK-2|SK-2]]
 - [[srs-requirements#PR-5|PR-5]]
+
+Issues / PRs: #4, PR #18
 
 ## Source
 

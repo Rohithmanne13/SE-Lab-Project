@@ -143,7 +143,7 @@ def main(argv: list[str]) -> int:
         f"tags: [{', '.join(tags)}]\n"
         f"created: {a.date}\n"
         f"author: {a.author}\n"
-        f"related: [{', '.join(related)}]\n"
+        f"related: [{', '.join(yaml_str(r) if REF_RE.match(r) else r for r in related)}]\n"
         "---\n\n"
         f"# {title}\n\n"
         f"{body}\n\n"

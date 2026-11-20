@@ -5,7 +5,7 @@ status: inbox
 tags: [course, process, second-brain]
 created: 2026-11-20
 author: Manne Rohith Sai
-related: [SE-1, SE-2, SE-3, SE-4, SE-5, SE-6, SE-7, SB-0, SB-1, SB-2, SB-3, SB-4, SB-5, SB-6, PR-1, PR-2, PR-3, PR-4, PR-5, AI-1, AI-2, AI-3, AI-4, TQ-7, TQ-8, SK-1, SK-2, SK-3, SK-4]
+related: [SE-1, SE-2, SE-3, SE-4, SE-5, SE-6, SE-7, SB-0, SB-1, SB-2, SB-3, SB-4, SB-5, SB-6, PR-1, PR-2, PR-3, PR-4, PR-5, AI-1, AI-2, AI-3, AI-4, TQ-7, TQ-8, SK-1, SK-2, SK-3, SK-4, "#4", "PR #18"]
 ---
 
 # The AI-Assisted SDLC and workflow (course document)
@@ -60,6 +60,8 @@ The course document that defines the engineering practices, CI/CD requirements a
 - [[srs-requirements#SK-2|SK-2]]
 - [[srs-requirements#SK-3|SK-3]]
 - [[srs-requirements#SK-4|SK-4]]
+
+Issues / PRs: #4, PR #18
 
 ## Source
 

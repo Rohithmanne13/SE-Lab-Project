@@ -5,7 +5,7 @@ status: distilled
 tags: [agent-skills, skills, process]
 created: 2026-11-20
 author: Manne Rohith Sai
-related: [SK-0, CON-8, SB-3, TQ-7, PR-5, UI-4]
+related: [SK-0, CON-8, SB-3, TQ-7, PR-5, UI-4, "#2", "PR #18"]
 ---
 
 # Agent Skills format

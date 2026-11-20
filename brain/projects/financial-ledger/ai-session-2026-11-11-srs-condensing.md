@@ -5,7 +5,7 @@ status: distilled
 tags: [ai-session, srs, stage-1]
 created: 2026-11-20
 author: Manne Rohith Sai
-related: [SE-1, AI-1, AI-2, AI-3]
+related: [SE-1, AI-1, AI-2, AI-3, "#1"]
 ---
 
 # AI session 2026-11-11: condensing the SRS to 15 pages

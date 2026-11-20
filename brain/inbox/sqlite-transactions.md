@@ -5,7 +5,7 @@ status: inbox
 tags: [sqlite, transactions, concurrency]
 created: 2026-11-20
 author: Manne Rohith Sai
-related: [FR-3, FR-3.1, FR-3.2, FR-3.6, SI-3, CON-2, NFR-SAFE-3]
+related: [FR-3, FR-3.1, FR-3.2, FR-3.6, SI-3, CON-2, NFR-SAFE-3, "#4", "PR #18"]
 ---
 
 # SQLite transactions
@@ -37,6 +37,8 @@ SQLite's documentation of transaction control (BEGIN, COMMIT, ROLLBACK). It expl
 - [[srs-requirements#SI-3|SI-3]]
 - [[srs-requirements#CON-2|CON-2]]
 - [[srs-requirements#NFR-SAFE-3|NFR-SAFE-3]]
+
+Issues / PRs: #4, PR #18
 
 ## Source
 

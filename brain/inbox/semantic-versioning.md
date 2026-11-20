@@ -5,7 +5,7 @@ status: inbox
 tags: [versioning, release, process]
 created: 2026-11-20
 author: Manne Rohith Sai
-related: [PR-4]
+related: [PR-4, "#4", "PR #18"]
 ---
 
 # Semantic Versioning 2.0.0
@@ -33,6 +33,8 @@ Semantic Versioning 2.0.0 (semver.org): version numbers of the form MAJOR.MINOR.
 ## Requirements
 
 - [[srs-requirements#PR-4|PR-4]]
+
+Issues / PRs: #4, PR #18
 
 ## Source
 

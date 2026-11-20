@@ -55,6 +55,20 @@ class IngestRegressions(TempVault):
         for path, content in before.items():
             self.assertEqual(path.read_bytes(), content, f"{path.name} changed after a rejected ingest")
 
+    def test_issue_and_pr_references_are_quoted_in_front_matter(self):
+        # Defect 3 (2026-11-20): an unquoted '#4' in 'related: [...]' is a YAML comment, so Obsidian dropped it.
+        body_file = self.tmp / "body.md"
+        body_file.write_text("## Summary\n\ns\n\n## Key points\n\n- k\n\n## Links\n\n- [[para-method]]\n", encoding="utf-8")
+        result = subprocess.run(
+            [sys.executable, str(INGEST), "--vault", str(self.vault), "--title", "Refs note", "--slug", "regression-refs",
+             "--source", "https://example.org", "--author", "Manne Rohith Sai", "--tags", "test",
+             "--related", "SK-1,#4,PR #18", "--body", str(body_file)], capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        text = (self.vault / "inbox" / "regression-refs.md").read_text(encoding="utf-8")
+        self.assertIn('related: [SK-1, "#4", "PR #18"]', text)
+        fields, _ = bl.parse_front_matter(text)
+        self.assertEqual(fields["related"], ["SK-1", "#4", "PR #18"])
+
     def test_created_note_passes_vault_validation(self):
         body = "## Summary\n\ns\n\n## Key points\n\n- k\n\n## Links\n\n- [[para-method]]\n"
         self.assertEqual(self.ingest(body, "regression-valid").returncode, 0)

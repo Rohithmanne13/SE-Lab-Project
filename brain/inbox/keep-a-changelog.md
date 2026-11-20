@@ -5,7 +5,7 @@ status: inbox
 tags: [changelog, release, process]
 created: 2026-11-20
 author: Manne Rohith Sai
-related: [PR-4]
+related: [PR-4, "#4", "PR #18"]
 ---
 
 # Keep a Changelog 1.1.0
@@ -29,6 +29,8 @@ related: [PR-4]
 ## Requirements
 
 - [[srs-requirements#PR-4|PR-4]]
+
+Issues / PRs: #4, PR #18
 
 ## Source
 

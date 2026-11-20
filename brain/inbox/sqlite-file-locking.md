@@ -5,7 +5,7 @@ status: inbox
 tags: [sqlite, locking, durability]
 created: 2026-11-20
 author: Manne Rohith Sai
-related: [FR-3.6, AS-1, NFR-SAFE-3, NFR-SAFE-4, NFR-REL-2]
+related: [FR-3.6, AS-1, NFR-SAFE-3, NFR-SAFE-4, NFR-REL-2, "#4", "PR #18"]
 ---
 
 # SQLite file locking and concurrency
@@ -33,6 +33,8 @@ SQLite's description of file locking and concurrency in version 3 (rollback-jour
 - [[srs-requirements#NFR-SAFE-3|NFR-SAFE-3]]
 - [[srs-requirements#NFR-SAFE-4|NFR-SAFE-4]]
 - [[srs-requirements#NFR-REL-2|NFR-REL-2]]
+
+Issues / PRs: #4, PR #18
 
 ## Source
 

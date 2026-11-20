@@ -5,7 +5,7 @@ status: distilled
 tags: [srs, requirements, traceability]
 created: 2026-11-20
 author: Manne Rohith Sai
-related: [SE-1, SE-5, SB-1]
+related: [SE-1, SE-5, SB-1, "#1"]
 ---
 
 # SRS requirement index

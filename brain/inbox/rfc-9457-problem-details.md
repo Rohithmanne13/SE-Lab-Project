@@ -5,7 +5,7 @@ status: inbox
 tags: [http, errors, api]
 created: 2026-11-20
 author: Manne Rohith Sai
-related: [FR-0.3, UI-3, SEC-6, CON-4]
+related: [FR-0.3, UI-3, SEC-6, CON-4, "#4", "PR #18"]
 ---
 
 # RFC 9457: Problem Details for HTTP APIs
@@ -33,6 +33,8 @@ RFC 9457 (IETF, obsoletes RFC 7807) defines "problem details": a standard JSON o
 - [[srs-requirements#UI-3|UI-3]]
 - [[srs-requirements#SEC-6|SEC-6]]
 - [[srs-requirements#CON-4|CON-4]]
+
+Issues / PRs: #4, PR #18
 
 ## Source
 

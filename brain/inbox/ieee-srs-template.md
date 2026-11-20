@@ -5,7 +5,7 @@ status: inbox
 tags: [course, srs, ieee]
 created: 2026-11-20
 author: Manne Rohith Sai
-related: [SE-1]
+related: [SE-1, "#4", "PR #18"]
 ---
 
 # IEEE SRS template (Wiegers, 1999)
@@ -31,6 +31,8 @@ The IEEE-style SRS template by Karl E. Wiegers (1999) that the course provided. 
 ## Requirements
 
 - [[srs-requirements#SE-1|SE-1]]
+
+Issues / PRs: #4, PR #18
 
 ## Source
 

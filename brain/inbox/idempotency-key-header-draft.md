@@ -5,7 +5,7 @@ status: inbox
 tags: [http, idempotency, api]
 created: 2026-11-20
 author: Manne Rohith Sai
-related: [FR-2, FR-2.3, FR-2.4, FR-2.6, FR-2.7, FR-2.8, FR-2.9, BR-9]
+related: [FR-2, FR-2.3, FR-2.4, FR-2.6, FR-2.7, FR-2.8, FR-2.9, BR-9, "#4", "PR #18"]
 ---
 
 # The Idempotency-Key HTTP header field (IETF draft -08)
@@ -38,6 +38,8 @@ IETF Internet-Draft draft-ietf-httpapi-idempotency-key-header-08 (J. Jena, S. Da
 - [[srs-requirements#FR-2.8|FR-2.8]]
 - [[srs-requirements#FR-2.9|FR-2.9]]
 - [[srs-requirements#BR-9|BR-9]]
+
+Issues / PRs: #4, PR #18
 
 ## Source
 

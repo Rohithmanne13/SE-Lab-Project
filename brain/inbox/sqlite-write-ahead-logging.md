@@ -5,7 +5,7 @@ status: inbox
 tags: [sqlite, wal, concurrency]
 created: 2026-11-20
 author: Manne Rohith Sai
-related: [SI-2, CON-2, FR-5.1, NFR-REL-5, AS-1]
+related: [SI-2, CON-2, FR-5.1, NFR-REL-5, AS-1, "#4", "PR #18"]
 ---
 
 # SQLite write-ahead logging (WAL)
@@ -36,6 +36,8 @@ SQLite's documentation of Write-Ahead Logging (WAL), an alternative to the defau
 - [[srs-requirements#FR-5.1|FR-5.1]]
 - [[srs-requirements#NFR-REL-5|NFR-REL-5]]
 - [[srs-requirements#AS-1|AS-1]]
+
+Issues / PRs: #4, PR #18
 
 ## Source
 
