@@ -1,0 +1,6 @@
+# Reviewed gitleaks findings that are NOT secrets (SEC-8). Add an entry only after a team
+# member has confirmed the value is public, and say why. One fingerprint per line.
+
+# Public example value "8e03978e-40d5-43e8-bc93-6894a57f9324" quoted from the IETF draft
+# draft-ietf-httpapi-idempotency-key-header-08, section 2.2 (research note, SK-1). Not a credential.
+c1ccf7696c10b6fc0031f47a0a0d91b3b2a42628:brain/inbox/idempotency-key-header-draft.md:generic-api-key:20
