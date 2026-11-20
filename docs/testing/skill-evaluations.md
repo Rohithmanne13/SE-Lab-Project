@@ -60,5 +60,6 @@ A reviewer compares at least two notes with their sources and confirms that ever
 
 ### Defects found during the evaluation
 
-1. `ingest.py` treated link examples inside inline code as real links and rejected a valid note - fixed (code is now ignored, as in the CI validator).
-2. The shared link parser read an escaped `\|` inside a table link as part of the heading name - fixed.
+1. `ingest.py` treated link examples inside inline code as real links and rejected a valid note - fixed; code is now ignored, as in the CI validator (#10).
+2. The shared link parser read an escaped `\|` inside a table link as part of the heading name - fixed (#11).
+3. Issue/PR references written unquoted in `related:` are YAML comments, so Obsidian dropped them - fixed; references are now quoted (#19).

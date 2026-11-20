@@ -7,29 +7,29 @@ Requirement statements: [`brain/projects/financial-ledger/srs-requirements.md`](
 
 | Requirement | Issue | PR | Test / verification | Skill | Brain note |
 |---|---|---|---|---|---|
-| SE-1 SRS with FR, NFR, SK | - | - | I: `docs/srs/Team007_SRS_Submission.pdf` | - | `srs-requirements`, `ai-session-2026-11-11-srs-condensing` |
-| SB-0 vault: PARA, index, log | | | T: `validate_brain.py` (CI job "validate brain notes") | brain-ingest | `second-brain-workflow` |
-| SB-1 links to requirement IDs, issues, PRs | | | T: `validate_brain.py` broken-link check | brain-ingest | `second-brain-workflow`, `obsidian-internal-links` |
-| SB-2 stage review note | | | I: `stage-1-review` | - | `stage-1-review` |
-| SB-3 skills cite a distilled note | | | T: `validate_skills.py` | brain-ingest | `agent-skills-format`, `second-brain-workflow` |
-| SB-4 AGENTS.md | | | I: `AGENTS.md` | - | `sdlc-and-workflow` |
-| SB-5 brain changes through PRs | | | I: PR history, branch protection | - | `second-brain-workflow` |
-| SB-6 every member authors notes | | | I: commit history, note `author` fields | brain-ingest | `second-brain-workflow` |
-| SK-0 skill format | | | T: `validate_skills.py`; S1-S4 in `docs/testing/skill-evaluations.md` | brain-ingest | `agent-skills-format`, `agent-skills-specification` |
-| SK-1 brain-ingest, at least 10 notes | | | T: `check_note.py` E1-E7, N1-N6; `tests/test_brain_tools.py` | brain-ingest | 13 notes in `brain/inbox/` |
-| DR-8 note front matter | | | T: `validate_brain.py` schema check | brain-ingest | `second-brain-workflow` |
-| PR-1 commits, branching strategy | | | I: `CONTRIBUTING.md`, commit history | - | `sdlc-and-workflow` |
-| PR-2 GitHub Issues | | | I: Issues list | - | `sdlc-and-workflow` |
-| PR-3 reviewed PRs, branch protection | | | I: PR reviews, branch protection settings | - | `sdlc-and-workflow` |
-| PR-4 SemVer tags, CHANGELOG | | | I: `CHANGELOG.md`, tag `v0.1.0` | - | `keep-a-changelog`, `semantic-versioning` |
-| PR-5 CI on every PR | | | I: `.github/workflows/ci.yml`, CI runs | - | `sdlc-and-workflow` |
-| SEC-8 secret scanning | | | T: CI job "secret scan" | - | - |
-| SEC-9 pinned dependencies | | | I: action SHAs and gitleaks version/checksum in `ci.yml` | - | - |
-| SE-4 development plan | | | I: `docs/development-plan.md` | - | - |
-| SE-5 traceability matrix | | | I: this file | - | `srs-requirements` |
-| TQ-7 skill evaluations | | | I: `docs/testing/skill-evaluations.md` | brain-ingest | - |
-| TQ-8 regression tests for defects | | | T: `tests/test_brain_tools.py` | - | - |
-| AI-3 ai-session notes | | | I: `ai-session-*` notes | - | `ai-session-2026-11-20-stage-1-setup` |
+| SE-1 SRS with FR, NFR, SK | #1 | PR #18 | I: `docs/srs/Team007_SRS_Submission.pdf` | - | `srs-requirements`, `ai-session-2026-11-11-srs-condensing` |
+| SB-0 vault: PARA, index, log | #2 | PR #18 | T: `validate_brain.py` (CI job "validate brain notes") | brain-ingest | `second-brain-workflow` |
+| SB-1 links to requirement IDs, issues, PRs | #2 | PR #18 | T: `validate_brain.py` broken-link check | brain-ingest | `second-brain-workflow`, `obsidian-internal-links` |
+| SB-2 stage review note | #9, #16 | PR #18 | I: `stage-1-review` | - | `stage-1-review` |
+| SB-3 skills cite a distilled note | #2, #3 | PR #18 | T: `validate_skills.py` | brain-ingest | `agent-skills-format`, `second-brain-workflow` |
+| SB-4 AGENTS.md | #5 | PR #18 | I: `AGENTS.md` | - | `sdlc-and-workflow` |
+| SB-5 brain changes through PRs | #12 | PR #18 | I: PR history, branch protection | - | `second-brain-workflow` |
+| SB-6 every member authors notes | #4, #13, #14, #15 | PR #18 (+ member PRs) | I: commit history, note `author` fields | brain-ingest | `second-brain-workflow` |
+| SK-0 skill format | #3 | PR #18 | T: `validate_skills.py`; S1-S4 in `docs/testing/skill-evaluations.md` | brain-ingest | `agent-skills-format`, `agent-skills-specification` |
+| SK-1 brain-ingest, at least 10 notes | #3, #4 | PR #18 | T: `check_note.py` E1-E7, N1-N6; `tests/test_brain_tools.py` | brain-ingest | 13 notes in `brain/inbox/` |
+| DR-8 note front matter | #2 | PR #18 | T: `validate_brain.py` schema check | brain-ingest | `second-brain-workflow` |
+| PR-1 commits, branching strategy | #6 | PR #18 | I: `CONTRIBUTING.md`, commit history | - | `sdlc-and-workflow` |
+| PR-2 GitHub Issues | #1-#17 | - | I: Issues list | - | `sdlc-and-workflow` |
+| PR-3 reviewed PRs, branch protection | #12, #16 | PR #18 | I: PR reviews, branch protection settings | - | `sdlc-and-workflow` |
+| PR-4 SemVer tags, CHANGELOG | #6, #17 | PR #18 | I: `CHANGELOG.md`, tag `v0.1.0` | - | `keep-a-changelog`, `semantic-versioning` |
+| PR-5 CI on every PR | #7 | PR #18 | I: `.github/workflows/ci.yml`, CI runs | - | `sdlc-and-workflow` |
+| SEC-8 secret scanning | #7 | PR #18 | T: CI job "secret scan" | - | - |
+| SEC-9 pinned dependencies | #7 | PR #18 | I: action SHAs and gitleaks version/checksum in `ci.yml` | - | - |
+| SE-4 development plan | #8 | PR #18 | I: `docs/development-plan.md` | - | - |
+| SE-5 traceability matrix | #8 | PR #18 | I: this file | - | `srs-requirements` |
+| TQ-7 skill evaluations | #9 | PR #18 | I: `docs/testing/skill-evaluations.md` | brain-ingest | - |
+| TQ-8 regression tests for defects | #10, #11, #19 | PR #18 | T: `tests/test_brain_tools.py` | - | - |
+| AI-3 ai-session notes | #9 | PR #18 | I: `ai-session-*` notes | - | `ai-session-2026-11-20-stage-1-setup` |
 
 ## Product and quality requirements (seeded from SRS Appendix D)
 
