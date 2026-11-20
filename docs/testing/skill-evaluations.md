@@ -7,7 +7,7 @@ Test documentation for SRS **TQ-7**: skill evaluations run before each stage sub
 - **Date:** 2026-11-20
 - **Run by:** Manne Rohith Sai (with Claude Code), branch `feature/stage-1-setup`
 - **Commands:** `python3 skills/brain-ingest/scripts/check_note.py`, `python3 scripts/ci/validate_brain.py`, `python3 scripts/ci/validate_skills.py`
-- **Overall:** PASS (fidelity review pending - see check 4)
+- **Overall:** PASS (human fidelity review pending - see check 4)
 
 ### 1. Output checks E1-E7 on every inbox note
 
@@ -56,7 +56,11 @@ A reviewer compares at least two notes with their sources and confirms that ever
 
 | Note | Reviewer | Result |
 |---|---|---|
-| _(to be filled by the PR reviewer)_ | | |
+| sqlite-transactions | AI cross-check (Claude Code), 2026-11-21 | PASS - 15/15 key-point claims matched to verbatim passages in sqlite.org/lang_transaction.html; only labelled "Team observation" lines are not from the source |
+| rfc-9457-problem-details | AI cross-check (Claude Code), 2026-11-21 | PASS - 18/18 key-point claims matched to verbatim passages in RFC 9457; only labelled "Team observation" lines are not from the source |
+| _(at least 2 notes)_ | _human reviewer - pending (PR #18 review, issue #16)_ | |
+
+The AI cross-check is supporting evidence only: the AI that wrote the notes cannot be their independent reviewer (AI-1), so a team member still performs the human check.
 
 ### Defects found during the evaluation
 
