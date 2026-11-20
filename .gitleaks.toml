@@ -1,0 +1,9 @@
+# gitleaks configuration (SEC-8): all default rules, plus reviewed values that are NOT secrets.
+# Add an allowlist entry only after a team member has confirmed the value is public, and say why.
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Public example Idempotency-Key value quoted from IETF draft-ietf-httpapi-idempotency-key-header-08, section 2.2, in brain/inbox/idempotency-key-header-draft.md. Not a credential."
+regexes = ['''^8e03978e-40d5-43e8-bc93-6894a57f9324$''']
