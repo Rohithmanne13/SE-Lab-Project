@@ -1,0 +1,30 @@
+# Obsidian: per-user app settings, workspace layout and trash (each member opens brain/ locally)
+.obsidian/
+brain/.obsidian/
+.trash/
+brain/.trash/
+
+# Secrets stay out of the repository (CON-9, SEC-5); commit only a dummy example file
+.env
+.env.*
+!.env.example
+
+# Local databases and build output
+*.db
+*.db-wal
+*.db-shm
+target/
+build/
+out/
+
+# Python caches from the CI validators and skill scripts
+__pycache__/
+*.pyc
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+*.swp
