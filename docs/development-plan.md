@@ -21,7 +21,7 @@ Every task becomes a GitHub Issue (PR-2) and is delivered through a reviewed pul
 | 1.2 | Obsidian vault `brain/` with PARA folders, `index.md`, `log.md` | SB-0 | Rohith | Done |
 | 1.3 | brain-ingest skill (SKILL.md, helper and evaluation scripts) | SK-0, SK-1 | Rohith | Done |
 | 1.4 | At least 10 research notes added with brain-ingest | SK-1 | Rohith (13 notes) | Done |
-| 1.5 | One research note each, ingested with brain-ingest from the member's own account | SB-6, SK-1 | Suhith: Model Context Protocol intro; Dhanush: Superpowers skill set; Abhiram: OpenAPI 3.1.0 | To do |
+| 1.5 | Research note ingested with brain-ingest from his own account (Model Context Protocol intro, #13) | SB-6, SK-1 | Suhith | To do |
 | 1.6 | AGENTS.md at the repository root | SB-4 | Rohith | Done |
 | 1.7 | Repository skeleton: README, CONTRIBUTING (branching strategy), CHANGELOG | PR-1, PR-4, SE-7 | Rohith | Done |
 | 1.8 | CI skeleton: build/lint/test, secret scan, SKILL.md and brain-note validation | PR-5, SEC-8, SEC-9 | Rohith | Done |
@@ -29,12 +29,14 @@ Every task becomes a GitHub Issue (PR-2) and is delivered through a reviewed pul
 | 1.10 | Skill evaluation run, results recorded | TQ-7 | Rohith; fidelity review by a reviewer | Done; fidelity review in PR |
 | 1.11 | Stage 1 review note and AI-session notes | SB-2, AI-3 | Rohith; all members add points | Done (draft) |
 | 1.12 | GitHub Issues for the Stage 1 work; branch protection on `main` (1 approving review, CI required) | PR-2, PR-3 | Rohith | To do |
-| 1.13 | Review and merge the Stage 1 PR; tag release `v0.1.0` and update CHANGELOG | PR-3, PR-4 | Reviewer: another member; tag: Rohith | To do |
+| 1.13 | Review the Stage 1 PR (#18), including the human fidelity check; add review points | PR-3, AI-1, SB-2 | Suhith | To do |
+| 1.14 | Merge the Stage 1 PR; tag release `v0.1.0` and update CHANGELOG | PR-3, PR-4 | Rohith | To do |
 
 ## Stage 2 - Design
 
 | # | Task | Requirements |
 |---|---|---|
+| 2.0 | Research notes from Dhanush (Superpowers skill set, #14) and Abhiram (OpenAPI 3.1.0, #15), each from his own account - deferred from Stage 1 by team decision | SB-6, SK-1 |
 | 2.1 | ADR-0001: implementation language, framework and build tool (citing a distilled note) | CON-6, SE-3, SB-3 |
 | 2.2 | Architecture and design documentation with UML and ER diagrams | SE-2, CON-5, DR-1 |
 | 2.3 | Further ADRs for significant decisions (e.g. idempotency storage, locking, hash-chain serialisation) | SE-3, FR-2.4, FR-3.1, FR-4.4 |
