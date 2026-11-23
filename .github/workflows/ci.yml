@@ -1,0 +1,77 @@
+# CI pipeline (SRS PR-5, SEC-8, SEC-9, TQ-5, OE-4).
+# Runs on every push and every pull request; a failing job blocks the merge
+# once these jobs are marked "required" in the main branch protection rule (PR-3).
+# Third-party actions and tools are pinned to exact versions (SEC-9).
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-lint-test:
+    name: build, lint, test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: No application code yet
+        if: hashFiles('pom.xml') == ''
+        run: |
+          echo "::notice::No pom.xml yet. The implementation language and build tool are decided in a Stage 2 ADR (SRS CON-6);"
+          echo "::notice::this job then builds, lints and runs the tests against an isolated database (TQ-5)."
+      - name: Set up JDK
+        if: hashFiles('pom.xml') != ''
+        uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        with:
+          distribution: temurin
+          java-version: "21"
+      - name: Build, lint and test
+        if: hashFiles('pom.xml') != ''
+        run: mvn -B -ntp verify
+
+  secret-scan:
+    name: secret scan
+    runs-on: ubuntu-latest
+    env:
+      GITLEAKS_VERSION: 8.30.1
+      GITLEAKS_SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0 # scan the full history, not only the last commit
+      - name: Install gitleaks (pinned, checksum-verified)
+        run: |
+          curl -sSfL -o gitleaks.tar.gz \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          echo "${GITLEAKS_SHA256}  gitleaks.tar.gz" | sha256sum --check --strict
+          tar -xzf gitleaks.tar.gz gitleaks
+      - name: Scan for secrets
+        run: ./gitleaks git --config .gitleaks.toml --redact --verbose .
+
+  validate-skills:
+    name: validate SKILL.md files
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Validate skills (SK-0, SB-3, Agent Skills format)
+        run: python3 scripts/ci/validate_skills.py skills brain
+      - name: Regression tests for skill and CI scripts (TQ-8)
+        run: python3 -m unittest discover -s tests -v
+
+  validate-brain:
+    name: validate brain notes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Validate vault (SB-0, SB-1, DR-8 schema, broken links)
+        run: python3 scripts/ci/validate_brain.py brain
+      - name: Check inbox notes against brain-ingest output rules (SK-1)
+        run: |
+          if ls brain/inbox/*.md >/dev/null 2>&1; then
+            python3 skills/brain-ingest/scripts/check_note.py --vault brain
+          else
+            echo "No notes in brain/inbox/ - nothing to check."
+          fi
