@@ -54,6 +54,7 @@ Maintained by the brain-ingest skill; brain-refine (Stage 2) moves these notes i
 - [[obsidian-internal-links]] - Obsidian internal links (2026-11-20, Manne Rohith Sai)
 - [[keep-a-changelog]] - Keep a Changelog 1.1.0 (2026-11-20, Manne Rohith Sai)
 - [[semantic-versioning]] - Semantic Versioning 2.0.0 (2026-11-20, Manne Rohith Sai)
+- [[model-context-protocol-intro]] - Model Context Protocol introduction (2026-11-23, Sunnapu Suhith Reddy)
 
 ## Archive
 
