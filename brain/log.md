@@ -21,3 +21,4 @@ Back to [[index]].
 - 2026-11-20 22:41 | brain-ingest | created [[keep-a-changelog]] in inbox/ | Manne Rohith Sai | source: https://keepachangelog.com/en/1.1.0/
 - 2026-11-20 22:41 | brain-ingest | created [[semantic-versioning]] in inbox/ | Manne Rohith Sai | source: https://semver.org/spec/v2.0.0.html
 - 2026-11-23 21:42 | brain-ingest | created [[model-context-protocol-intro]] in inbox/ | Sunnapu Suhith Reddy | source: https://modelcontextprotocol.io/docs/2026-07-28/getting-started/intro
+- 2026-11-26 18:18 | brain-ingest | created [[superpowers-skill-set]] in inbox/ | Rudraraju Dhanush Varma | source: https://github.com/obra/superpowers
