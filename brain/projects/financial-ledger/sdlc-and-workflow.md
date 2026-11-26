@@ -1,7 +1,7 @@
 ---
 title: "The AI-Assisted SDLC and workflow (course document)"
 type: research
-status: inbox
+status: distilled
 tags: [course, process, second-brain]
 created: 2026-11-20
 author: Manne Rohith Sai

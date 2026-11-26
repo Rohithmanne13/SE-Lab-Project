@@ -1,7 +1,7 @@
 ---
 title: "Superpowers skill set for coding agents"
 type: research
-status: inbox
+status: distilled
 tags: [agent-skills, ai-tools]
 created: 2026-11-26
 author: Rudraraju Dhanush Varma

@@ -1,7 +1,7 @@
 ---
 title: "RFC 9457: Problem Details for HTTP APIs"
 type: research
-status: inbox
+status: distilled
 tags: [http, errors, api]
 created: 2026-11-20
 author: Manne Rohith Sai

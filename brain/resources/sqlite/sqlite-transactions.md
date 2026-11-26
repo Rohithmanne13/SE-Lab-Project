@@ -1,7 +1,7 @@
 ---
 title: "SQLite transactions"
 type: research
-status: inbox
+status: distilled
 tags: [sqlite, transactions, concurrency]
 created: 2026-11-20
 author: Manne Rohith Sai

@@ -72,6 +72,11 @@ class IngestRegressions(TempVault):
     def test_created_note_passes_vault_validation(self):
         body = "## Summary\n\ns\n\n## Key points\n\n- k\n\n## Links\n\n- [[para-method]]\n"
         self.assertEqual(self.ingest(body, "regression-valid").returncode, 0)
+        inbox = (self.vault / "index.md").read_text(encoding="utf-8").split("## Inbox", 1)[1].split("## Archive", 1)[0]
+        # Regression (2026-11-23): the empty-inbox placeholder written by brain-refine must disappear on ingest.
+        self.assertNotIn("_(none yet)_", inbox)
+        self.assertNotIn("_(empty)_", inbox)
+        self.assertIn("- [[regression-valid]]", inbox)
         result = subprocess.run([sys.executable, str(REPO / "scripts" / "ci" / "validate_brain.py"), str(self.vault)],
                                 capture_output=True, text=True)
         self.assertEqual(result.returncode, 0, result.stdout)

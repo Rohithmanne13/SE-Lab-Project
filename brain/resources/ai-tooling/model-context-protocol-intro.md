@@ -1,7 +1,7 @@
 ---
 title: "Model Context Protocol introduction"
 type: research
-status: inbox
+status: distilled
 tags: [mcp, ai-tools]
 created: 2026-11-23
 author: Sunnapu Suhith Reddy
