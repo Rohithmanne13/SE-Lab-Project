@@ -39,3 +39,4 @@ Back to [[index]].
 - 2026-11-26 19:20 | brain-refine | moved [[agent-skills-specification]] inbox/ -> resources/ai-tooling/, status distilled | Rudraraju Dhanush Varma | -
 - 2026-11-26 19:20 | brain-refine | moved [[model-context-protocol-intro]] inbox/ -> resources/ai-tooling/, status distilled | Rudraraju Dhanush Varma | -
 - 2026-11-26 19:20 | brain-refine | moved [[superpowers-skill-set]] inbox/ -> resources/ai-tooling/, status distilled | Rudraraju Dhanush Varma | -
+- 2026-11-26 19:51 | brain-query | answered "Which HTTP status code should be returned when an Idempotency-Key is reused with a different payload?" | Rudraraju Dhanush Varma | cited [[srs-requirements]], [[idempotency-key-header-draft]]
