@@ -1,7 +1,7 @@
 ---
 title: "Obsidian internal links"
 type: research
-status: inbox
+status: distilled
 tags: [obsidian, links, second-brain]
 created: 2026-11-20
 author: Manne Rohith Sai

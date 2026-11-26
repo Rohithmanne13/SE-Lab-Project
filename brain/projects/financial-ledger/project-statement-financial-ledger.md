@@ -1,7 +1,7 @@
 ---
 title: "Project statement: Financial Ledger & Digital Wallet API"
 type: research
-status: inbox
+status: distilled
 tags: [course, requirements, ledger]
 created: 2026-11-20
 author: Manne Rohith Sai

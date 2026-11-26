@@ -1,7 +1,7 @@
 ---
 title: "The Idempotency-Key HTTP header field (IETF draft -08)"
 type: research
-status: inbox
+status: distilled
 tags: [http, idempotency, api]
 created: 2026-11-20
 author: Manne Rohith Sai

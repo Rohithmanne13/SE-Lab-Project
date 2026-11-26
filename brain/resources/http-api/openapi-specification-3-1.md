@@ -1,7 +1,7 @@
 ---
 title: "OpenAPI Specification 3.1.0"
 type: research
-status: inbox
+status: distilled
 tags: [openapi, api-docs]
 created: 2026-11-26
 author: Abhiram P B S

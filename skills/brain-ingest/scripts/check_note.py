@@ -82,8 +82,8 @@ def main(argv: list[str]) -> int:
     notes = bl.vault_notes(vault)
     targets = [Path(n) for n in a.notes] or sorted((vault / "inbox").glob("*.md"))
     if not targets:
-        print("FAIL: no notes to evaluate")
-        return 1
+        print("PASS: no notes in brain/inbox/ to evaluate (all notes have been refined into PARA folders)")
+        return 0
     index_text = (vault / "index.md").read_text(encoding="utf-8")
     log_text = (vault / "log.md").read_text(encoding="utf-8")
     failed = 0

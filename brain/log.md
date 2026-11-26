@@ -23,3 +23,19 @@ Back to [[index]].
 - 2026-11-23 21:42 | brain-ingest | created [[model-context-protocol-intro]] in inbox/ | Sunnapu Suhith Reddy | source: https://modelcontextprotocol.io/docs/2026-07-28/getting-started/intro
 - 2026-11-26 18:18 | brain-ingest | created [[superpowers-skill-set]] in inbox/ | Rudraraju Dhanush Varma | source: https://github.com/obra/superpowers
 - 2026-11-26 18:41 | brain-ingest | created [[openapi-specification-3-1]] in inbox/ | Abhiram P B S | source: https://spec.openapis.org/oas/v3.1.0
+- 2026-11-26 19:20 | brain-refine | moved [[project-statement-financial-ledger]] inbox/ -> projects/financial-ledger/, status distilled | Rudraraju Dhanush Varma | -
+- 2026-11-26 19:20 | brain-refine | moved [[sdlc-and-workflow]] inbox/ -> projects/financial-ledger/, status distilled | Rudraraju Dhanush Varma | -
+- 2026-11-26 19:20 | brain-refine | moved [[ieee-srs-template]] inbox/ -> projects/financial-ledger/, status distilled | Rudraraju Dhanush Varma | -
+- 2026-11-26 19:20 | brain-refine | moved [[para-method]] inbox/ -> areas/second-brain/, status distilled | Rudraraju Dhanush Varma | -
+- 2026-11-26 19:20 | brain-refine | moved [[obsidian-internal-links]] inbox/ -> areas/second-brain/, status distilled | Rudraraju Dhanush Varma | -
+- 2026-11-26 19:20 | brain-refine | moved [[keep-a-changelog]] inbox/ -> areas/release-management/, status distilled | Rudraraju Dhanush Varma | -
+- 2026-11-26 19:20 | brain-refine | moved [[semantic-versioning]] inbox/ -> areas/release-management/, status distilled | Rudraraju Dhanush Varma | -
+- 2026-11-26 19:20 | brain-refine | moved [[sqlite-transactions]] inbox/ -> resources/sqlite/, status distilled | Rudraraju Dhanush Varma | -
+- 2026-11-26 19:20 | brain-refine | moved [[sqlite-write-ahead-logging]] inbox/ -> resources/sqlite/, status distilled | Rudraraju Dhanush Varma | -
+- 2026-11-26 19:20 | brain-refine | moved [[sqlite-file-locking]] inbox/ -> resources/sqlite/, status distilled | Rudraraju Dhanush Varma | -
+- 2026-11-26 19:20 | brain-refine | moved [[rfc-9457-problem-details]] inbox/ -> resources/http-api/, status distilled | Rudraraju Dhanush Varma | -
+- 2026-11-26 19:20 | brain-refine | moved [[idempotency-key-header-draft]] inbox/ -> resources/http-api/, status distilled | Rudraraju Dhanush Varma | -
+- 2026-11-26 19:20 | brain-refine | moved [[openapi-specification-3-1]] inbox/ -> resources/http-api/, status distilled | Rudraraju Dhanush Varma | -
+- 2026-11-26 19:20 | brain-refine | moved [[agent-skills-specification]] inbox/ -> resources/ai-tooling/, status distilled | Rudraraju Dhanush Varma | -
+- 2026-11-26 19:20 | brain-refine | moved [[model-context-protocol-intro]] inbox/ -> resources/ai-tooling/, status distilled | Rudraraju Dhanush Varma | -
+- 2026-11-26 19:20 | brain-refine | moved [[superpowers-skill-set]] inbox/ -> resources/ai-tooling/, status distilled | Rudraraju Dhanush Varma | -

@@ -1,7 +1,7 @@
 ---
 title: "SQLite write-ahead logging (WAL)"
 type: research
-status: inbox
+status: distilled
 tags: [sqlite, wal, concurrency]
 created: 2026-11-20
 author: Manne Rohith Sai

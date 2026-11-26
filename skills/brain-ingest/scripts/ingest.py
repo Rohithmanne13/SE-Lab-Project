@@ -161,7 +161,7 @@ def main(argv: list[str]) -> int:
     head, _, tail = index_text.partition(marker)
     section, sep, rest = tail.partition("\n## ")
     entry = f"- [[{slug}]] - {title} ({a.date}, {a.author})"
-    section = section.replace("\n- _(empty)_", "").rstrip("\n")
+    section = section.replace("\n- _(empty)_", "").replace("\n_(none yet)_", "").rstrip("\n")
     last = section.splitlines()[-1] if section.strip() else ""
     section += ("\n" if last.startswith("- [[") else "\n\n") + entry + "\n"
     new_index = head + marker + section + ("\n" + sep.lstrip("\n") + rest if sep else "")

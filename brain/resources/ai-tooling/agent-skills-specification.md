@@ -1,7 +1,7 @@
 ---
 title: "Agent Skills format specification"
 type: research
-status: inbox
+status: distilled
 tags: [agent-skills, skills, specification]
 created: 2026-11-20
 author: Manne Rohith Sai

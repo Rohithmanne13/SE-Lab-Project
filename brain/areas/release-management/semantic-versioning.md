@@ -1,7 +1,7 @@
 ---
 title: "Semantic Versioning 2.0.0"
 type: research
-status: inbox
+status: distilled
 tags: [versioning, release, process]
 created: 2026-11-20
 author: Manne Rohith Sai

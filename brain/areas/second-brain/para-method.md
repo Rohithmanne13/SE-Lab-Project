@@ -1,7 +1,7 @@
 ---
 title: "The PARA method (Tiago Forte)"
 type: research
-status: inbox
+status: distilled
 tags: [second-brain, para, organisation]
 created: 2026-11-20
 author: Manne Rohith Sai

@@ -1,7 +1,7 @@
 ---
 title: "IEEE SRS template (Wiegers, 1999)"
 type: research
-status: inbox
+status: distilled
 tags: [course, srs, ieee]
 created: 2026-11-20
 author: Manne Rohith Sai
