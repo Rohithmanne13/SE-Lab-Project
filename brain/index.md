@@ -55,6 +55,7 @@ Maintained by the brain-ingest skill; brain-refine (Stage 2) moves these notes i
 - [[keep-a-changelog]] - Keep a Changelog 1.1.0 (2026-11-20, Manne Rohith Sai)
 - [[semantic-versioning]] - Semantic Versioning 2.0.0 (2026-11-20, Manne Rohith Sai)
 - [[model-context-protocol-intro]] - Model Context Protocol introduction (2026-11-23, Sunnapu Suhith Reddy)
+- [[superpowers-skill-set]] - Superpowers skill set for coding agents (2026-11-26, Rudraraju Dhanush Varma)
 
 ## Archive
 
