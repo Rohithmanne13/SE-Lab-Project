@@ -68,6 +68,8 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Validate vault (SB-0, SB-1, DR-8 schema, broken links)
         run: python3 scripts/ci/validate_brain.py brain
+      - name: Validate ADRs (SE-3, SB-3 - sections and distilled-note citations)
+        run: python3 scripts/ci/validate_adrs.py docs/adr brain
       - name: Check inbox notes against brain-ingest output rules (SK-1)
         run: |
           if ls brain/inbox/*.md >/dev/null 2>&1; then
