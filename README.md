@@ -4,7 +4,7 @@ Team 007 - Software Engineering Lab, IIIT Bangalore (Project 2).
 
 A backend that exposes a RESTful API to create users and per-currency wallets, move money between wallets with idempotent transfers, and keep a tamper-evident double-entry ledger in SQLite, so that money is never lost, created or double-charged, even under retries and concurrent requests.
 
-**Status: Stage 2 - Design.** Architecture and design docs with UML/ER diagrams, ADRs, the brain-refine and brain-query skills, and a service skeleton with `GET /health` are in place. The full API is built in Stage 3.
+**Status: Stage 2 - Design.** Architecture and design docs with UML/ER diagrams, ADRs, the brain-refine, brain-query and local-check skills, and a service skeleton with `GET /health` are in place. The full API is built in Stage 3.
 
 ## Team
 
@@ -29,7 +29,7 @@ A backend that exposes a RESTful API to create users and per-currency wallets, m
 | `docs/traceability.md` | Traceability matrix: requirement -> issue -> PR -> test -> skill -> brain note (SE-5). |
 | `docs/testing/` | Test documentation, including skill evaluation results (TQ-7). |
 | `brain/` | Obsidian second-brain vault, organised with PARA; start at `brain/index.md`. |
-| `skills/` | Agent Skills (`SKILL.md` folders): `brain-ingest`, `brain-refine`, `brain-query`. |
+| `skills/` | Agent Skills (`SKILL.md` folders): `brain-ingest`, `brain-refine`, `brain-query`, `local-check`. |
 | `scripts/ci/` | Validators used by CI. |
 | `tests/` | Automated tests. |
 | `AGENTS.md` | Rules for AI coding agents working in this repository. |
@@ -52,6 +52,7 @@ python3 scripts/ci/validate_brain.py
 python3 scripts/ci/validate_skills.py
 python3 -m unittest discover -s tests -v
 sh ./mvnw -B verify                   # lint, compile, test and package the service
+python3 skills/local-check/scripts/local_check.py --by "<your full name>"   # SK-4: build, test, start, GET /health
 ```
 
 ### Run the service

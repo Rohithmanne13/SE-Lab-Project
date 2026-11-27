@@ -25,6 +25,7 @@ Every note starts with the front matter required by DR-8 (`title`, `type`, `stat
 
 - [[srs-requirements]] - SRS requirement index (all 179 IDs).
 - [[stage-1-review]] - Stage 1 review note (SB-2).
+- [[stage-2-review]] - Stage 2 review note (SB-2).
 - [[ai-session-2026-11-11-srs-condensing]] - AI session: condensing the SRS to 15 pages (AI-3).
 - [[ai-session-2026-11-20-stage-1-setup]] - AI session: setting up the Stage 1 deliverables (AI-3).
 - [[project-statement-financial-ledger]] - Project statement: Financial Ledger & Digital Wallet API (2026-11-20, Manne Rohith Sai)

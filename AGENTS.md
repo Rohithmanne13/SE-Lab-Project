@@ -18,7 +18,7 @@ Instructions for AI coding agents (Claude Code, Copilot, Codex and similar) work
 | Path | Contents |
 |---|---|
 | `brain/` | Obsidian second-brain vault (PARA). Entry point `brain/index.md`; every skill run is logged in `brain/log.md`. |
-| `skills/<skill-name>/SKILL.md` | Agent Skills (SK-0). Current: `brain-ingest`, `brain-refine`, `brain-query`. Planned: `local-check` (Stage 2), `simulate-transfer` (Stage 3). |
+| `skills/<skill-name>/SKILL.md` | Agent Skills (SK-0). Current: `brain-ingest`, `brain-refine`, `brain-query`, `local-check`. Planned: `simulate-transfer` (Stage 3). |
 | `src/main/java/edu/iiitb/team007/ledger/` | Service code, layered `api` -> `service` -> `persistence` with `domain`, `support`, `config` (CON-5, `docs/design/architecture.md`). |
 | `src/test/java/...` | JUnit 5 tests; each uses a fresh temporary database file (TQ-5). |
 | `scripts/ci/` | CI validators for the vault and the skills. |
