@@ -1,0 +1,17 @@
+[
+  {"id": "Q1", "question": "Which SQLite transaction type takes the write lock immediately, and when can it fail with SQLITE_BUSY?", "expected": ["sqlite-transactions"]},
+  {"id": "Q2", "question": "How does write-ahead logging let readers and a writer run at the same time?", "expected": ["sqlite-write-ahead-logging"]},
+  {"id": "Q3", "question": "Why should a SQLite database not be stored on a network filesystem?", "expected": ["sqlite-file-locking", "sqlite-write-ahead-logging"]},
+  {"id": "Q4", "question": "Which HTTP status code should be returned when an Idempotency-Key is reused with a different payload?", "expected": ["idempotency-key-header-draft"]},
+  {"id": "Q5", "question": "Which members does a problem details object for HTTP API errors contain?", "expected": ["rfc-9457-problem-details"]},
+  {"id": "Q6", "question": "What fields does the root OpenAPI object require?", "expected": ["openapi-specification-3-1"]},
+  {"id": "Q7", "question": "What are the naming rules for the name field of an Agent Skill?", "expected": ["agent-skills-specification", "agent-skills-format"]},
+  {"id": "Q8", "question": "How do we organise notes with PARA projects, areas, resources and archives?", "expected": ["para-method", "second-brain-workflow"]},
+  {"id": "Q9", "question": "How do I link to a heading in another Obsidian note?", "expected": ["obsidian-internal-links"]},
+  {"id": "Q10", "question": "Which version number should the first initial development release use under Semantic Versioning?", "expected": ["semantic-versioning"]},
+  {"id": "Q11", "question": "Which types of changes does a changelog group?", "expected": ["keep-a-changelog"]},
+  {"id": "Q12", "question": "What does the Superpowers test-driven-development skill enforce?", "expected": ["superpowers-skill-set"]},
+  {"id": "Q13", "question": "What is the Model Context Protocol and what can it connect AI applications to?", "expected": ["model-context-protocol-intro"]},
+  {"id": "Q14", "question": "What are the Stage 1 deliverables of the course?", "expected": ["sdlc-and-workflow"]},
+  {"id": "Q15", "question": "What does requirement FR-2.4 say about the request fingerprint?", "expected": ["srs-requirements"]}
+]
