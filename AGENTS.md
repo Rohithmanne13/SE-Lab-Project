@@ -18,10 +18,12 @@ Instructions for AI coding agents (Claude Code, Copilot, Codex and similar) work
 | Path | Contents |
 |---|---|
 | `brain/` | Obsidian second-brain vault (PARA). Entry point `brain/index.md`; every skill run is logged in `brain/log.md`. |
-| `skills/<skill-name>/SKILL.md` | Agent Skills (SK-0). Current: `brain-ingest`. Planned: `brain-refine`, `brain-query`, `local-check` (Stage 2), `simulate-transfer` (Stage 3). |
+| `skills/<skill-name>/SKILL.md` | Agent Skills (SK-0). Current: `brain-ingest`, `brain-refine`, `brain-query`. Planned: `local-check` (Stage 2), `simulate-transfer` (Stage 3). |
+| `src/main/java/edu/iiitb/team007/ledger/` | Service code, layered `api` -> `service` -> `persistence` with `domain`, `support`, `config` (CON-5, `docs/design/architecture.md`). |
+| `src/test/java/...` | JUnit 5 tests; each uses a fresh temporary database file (TQ-5). |
 | `scripts/ci/` | CI validators for the vault and the skills. |
 | `tests/` | Automated tests (regression tests for tooling now; product tests from Stage 3). |
-| `docs/` | SRS, course material, development plan, traceability matrix, test documentation; ADRs in `docs/adr/` from Stage 2. |
+| `docs/` | SRS, course material, design (`docs/design/`), ADRs (`docs/adr/`), development plan, traceability matrix, test documentation. |
 | `.github/workflows/ci.yml` | CI: build/lint/test, secret scan, SKILL.md validation, brain-note validation. |
 
 ## Commands
@@ -33,9 +35,11 @@ python3 scripts/ci/validate_brain.py          # vault: PARA, index/log, DR-8 fro
 python3 scripts/ci/validate_skills.py         # every SKILL.md: name, sections, distilled-note citation
 python3 -m unittest discover -s tests -v      # regression tests
 python3 skills/brain-ingest/scripts/check_note.py   # brain-ingest evaluation on inbox notes
+python3 scripts/ci/validate_adrs.py           # every ADR: sections and a distilled-note citation (SB-3)
+sh ./mvnw -B verify                             # service: Checkstyle, compile, tests, package (JDK 21; Maven via wrapper)
 ```
 
-Run all four before opening a pull request; CI runs the same checks.
+Run all of them before opening a pull request; CI runs the same checks.
 
 ## Working with the brain (`brain/`)
 

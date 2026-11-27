@@ -10,6 +10,7 @@ brain/.trash/
 !.env.example
 
 # Local databases and build output
+data/
 *.db
 *.db-wal
 *.db-shm
