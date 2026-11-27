@@ -22,11 +22,14 @@ Written under SB-2 at the end of Stage 2. Each member adds their own points, sig
 
 - Running brain-refine with a script made every move identical, and its tests caught a bug that would have mislabelled archived notes in the index before it ever ran on the real vault. (Dhanush)
 - The evaluation set for brain-query gave a concrete target: all 15 questions find their expected notes, so we know the search works before relying on it. (Dhanush)
+- Checking every pull request with gh pr checks and gh pr diff before approving, one step at a time from an up-to-date main, kept every merge clean. (Abhiram)
 
 ## What did not work
 
 - Every brain pull request edits `index.md` and `log.md`, so brain pull requests have to be opened one after another from the latest `main` to avoid merge conflicts. (Dhanush)
+- A leftover untracked file blocked git pull after one merge, and one CI build failed only because Maven Central returned 429 Too Many Requests; both cost time although the code was correct. (Abhiram)
 
 ## What to change in Stage 3
 
 - Run local-check before every push, not only before a stage submission, now that the service builds. (Dhanush)
+- Cache the Maven downloads in the CI workflow and run git status before every pull, so that builds and merges do not fail for reasons outside the code. (Abhiram)

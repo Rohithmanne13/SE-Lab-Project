@@ -31,6 +31,31 @@ Requirement statements: [`brain/projects/financial-ledger/srs-requirements.md`](
 | TQ-8 regression tests for defects | #10, #11, #19 | PR #18 | T: `tests/test_brain_tools.py` | - | - |
 | AI-3 ai-session notes | #9 | PR #18 | I: `ai-session-*` notes | - | `ai-session-2026-11-20-stage-1-setup` |
 
+## Stage 2 deliverables
+
+PR numbers are linked from each closed issue.
+
+| Requirement | Issue | Test / verification | Skill | Brain note / document |
+|---|---|---|---|---|
+| SE-2 architecture and design, UML/ER diagrams | #24 | I: `docs/design/` (13 Mermaid diagrams, all parse) | - | `docs/design/architecture.md`, `data-model.md`, `behaviour.md` |
+| SE-3 ADRs citing brain notes | #23 | T: `validate_adrs.py` (CI), `tests/test_validate_adrs.py` | brain-query (drafting) | ADR-0001 to ADR-0004 |
+| CON-6 implementation language | #23 | I: ADR-0001; T: CI build | - | `sqlite-transactions`, `openapi-specification-3-1` |
+| CON-5, SE-6 layers and provider interfaces | #24, #25 | T: `HealthControllerDegradedTest` (substituted `DatabaseHealth`) | - | `docs/design/architecture.md` |
+| SB-3 ADRs cite distilled notes | #23 | T: `validate_adrs.py` | - | ADR Sources sections |
+| SK-2 brain-refine | #21 | T: `refine.py check`, `tests/test_brain_refine.py` | brain-refine | `second-brain-workflow`, `para-method` |
+| SK-3 brain-query | #22 | T: `eval_query.py` (15/15), `tests/test_brain_query.py` | brain-query | `second-brain-workflow` |
+| SK-4 local-check | #26 | T: local-check run 5/5, `tests/test_local_check.py` | local-check | `agent-skills-format` |
+| FR-6.4 GET /health | #25 | T: `HealthEndpointTest`, `HealthControllerDegradedTest` | local-check (4) | `docs/design/behaviour.md` 8 |
+| SI-2 connection settings | #25 | T: `SqliteConnectionSettingsTest` | - | ADR-0002 |
+| OE-3, DR-6 configuration | #25 | I: `application.properties`; T: tests use `ledger.db-path` | local-check | `docs/design/architecture.md` 6 |
+| PR-5, TQ-5 CI build/lint/test on isolated DB | #25 | T: CI job "build, lint, test" (`mvn -B -ntp verify`) | - | ADR-0001 |
+| SB-6 every member authors notes | #14, #15 | I: commit history, note `author` fields | brain-ingest | `superpowers-skill-set`, `openapi-specification-3-1` |
+| SB-2 stage review note | #27 | I: `stage-2-review` | - | `stage-2-review` |
+| TQ-7 skill evaluations | #27 | I: `docs/testing/skill-evaluations.md` Stage 2 | all skills | - |
+| TQ-8 regression tests | #27 | T: refine, ingest regression tests | - | - |
+| AI-3 ai-session notes | #27 | I: `ai-session-2026-11-23-stage-2-preparation` | - | `ai-session-2026-11-23-stage-2-preparation` |
+| PR-4 release | #28 | I: `CHANGELOG.md` 0.2.0, tag `v0.2.0` | - | `keep-a-changelog`, `semantic-versioning` |
+
 ## Product and quality requirements (seeded from SRS Appendix D)
 
 | Requirement | Method | Issue | PR | Test / verification | Skill | Brain note |
