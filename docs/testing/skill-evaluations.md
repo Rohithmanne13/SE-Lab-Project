@@ -2,6 +2,62 @@
 
 Test documentation for SRS **TQ-7**: skill evaluations run before each stage submission. Each skill's `## Evaluation` section defines its checks; results are recorded here, newest first.
 
+## Stage 2 - all skills
+
+- **Date:** Stage 2 submission (each member adds their local-check run to the table below)
+- **Overall:** PASS
+
+### brain-ingest (SK-1)
+
+| Check | Result |
+|---|---|
+| Notes added in Stage 2 with the skill | 2: `superpowers-skill-set` (Dhanush, #14), `openapi-specification-3-1` (Abhiram, #15) - both passed E1-E7 when created |
+| `check_note.py` after brain-refine | PASS - inbox empty, all notes refined into PARA folders |
+| `python3 -m unittest tests.test_brain_tools` | PASS - 8 tests |
+
+### brain-refine (SK-2)
+
+| Check | Result |
+|---|---|
+| First refine run | 16 inbox notes moved: 3 to `projects/financial-ledger`, 4 to `areas/` (second-brain, release-management), 9 to `resources/` (sqlite, http-api, ai-tooling); all `status: distilled` |
+| `refine.py check` (SK-2 acceptance) | PASS - inbox empty, 0 broken links |
+| `validate_brain.py` | PASS - 25 notes, 214 links, 0 errors |
+| `python3 -m unittest tests.test_brain_refine` | PASS - 7 tests (move, archive, keep, merge, relink, 12 refusal cases writing nothing) |
+
+### brain-query (SK-3)
+
+| Check | Result |
+|---|---|
+| `eval_query.py` - 15 fixed questions | PASS - 15/15 found their expected notes (an expected note in the top 3, all in the top 5) |
+| `python3 -m unittest tests.test_brain_query` | PASS - 7 tests |
+| Logged query | "Which HTTP status code should be returned when an Idempotency-Key is reused with a different payload?" - cited `srs-requirements`, `idempotency-key-header-draft` (answer: 422, FR-2.7) |
+| Reviewer check (3 evaluation questions run and their notes read) | Done by the reviewer of the brain-query pull request (#22) - see the review comment there |
+
+### local-check (SK-4)
+
+| Member | OS | Result |
+|---|---|---|
+| Rudraraju Dhanush Varma | Linux 6.9.3-76060903-generic | PASS 5/5 steps - build, tests, server, `GET /health` 200, report |
+| Abhiram P B S | Linux 6.18.58.1-microsoft-standard-WSL2 | PASS 5/5 steps - build, tests, server, `GET /health` 200, report |
+| Sunnapu Suhith Reddy | _add your run_ | |
+| Manne Rohith Sai | _add your run_ | |
+
+`python3 -m unittest tests.test_local_check` - PASS, 7 tests.
+
+### Supporting checks
+
+| Check | Result |
+|---|---|
+| `validate_skills.py` | PASS - 4 skills |
+| `validate_adrs.py` | PASS - 4 ADRs, each citing distilled notes (SB-3); `tests.test_validate_adrs` PASS - 5 tests |
+| `mvn -B verify` | PASS - 0 Checkstyle violations, 5 tests (FR-6.4, SI-2, SE-6) |
+
+### Defects found during Stage 2
+
+1. `refine.py` rewrote links inside `index.md`, which would have relabelled an archived duplicate's index entry - fixed before first use; covered by `test_merge_keeps_index_entry_of_the_archived_duplicate`.
+2. brain-ingest kept the new empty-inbox placeholder `_(none yet)_` beside a new entry - fixed; covered in `test_created_note_passes_vault_validation`.
+3. Two Mermaid sequence diagrams used `;` inside messages, which Mermaid treats as a statement end - fixed; all 13 diagrams parse.
+
 ## Stage 1 - brain-ingest (SK-1)
 
 - **Date:** 2026-11-20
