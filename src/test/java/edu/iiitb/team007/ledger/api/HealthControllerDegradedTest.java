@@ -1,37 +1,43 @@
 package edu.iiitb.team007.ledger.api;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import edu.iiitb.team007.ledger.config.LedgerProperties;
 import edu.iiitb.team007.ledger.persistence.DatabaseHealth;
+import edu.iiitb.team007.ledger.testsupport.ApiClient;
+import edu.iiitb.team007.ledger.testsupport.TestDatabase;
+import edu.iiitb.team007.ledger.testsupport.TestKeys;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.web.servlet.MockMvc;
 
 /** GET /health answers 503 "degraded" when the database is unusable - the provider is substituted (FR-6.4, SE-6). */
-@WebMvcTest(HealthController.class)
-@EnableConfigurationProperties(LedgerProperties.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class HealthControllerDegradedTest {
 
-    @Autowired
-    private MockMvc mvc;
+    @DynamicPropertySource
+    static void isolatedDatabase(DynamicPropertyRegistry registry) {
+        registry.add("ledger.db-path", () -> TestDatabase.fresh("degraded").toString());
+        TestKeys.register(registry);
+    }
+
+    @LocalServerPort
+    private int port;
 
     @MockitoBean
     private DatabaseHealth databaseHealth;
 
     @Test
-    void healthIsDegradedWhenDatabaseQueryFails() throws Exception {
+    void healthIsDegradedWhenDatabaseQueryFails() {
         when(databaseHealth.isAvailable()).thenReturn(false);
 
-        mvc.perform(get("/health"))
-                .andExpect(status().isServiceUnavailable())
-                .andExpect(jsonPath("$.status").value("degraded"))
-                .andExpect(jsonPath("$.database").value("unavailable"));
+        ApiClient.Response r = new ApiClient(port).get("/health", null);
+
+        assertThat(r.status()).isEqualTo(503);
+        assertThat(r.json().get("status").asText()).isEqualTo("degraded");
+        assertThat(r.json().get("database").asText()).isEqualTo("unavailable");
     }
 }

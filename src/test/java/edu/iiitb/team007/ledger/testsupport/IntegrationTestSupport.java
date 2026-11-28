@@ -6,13 +6,15 @@ import org.springframework.test.context.DynamicPropertySource;
 
 /**
  * Base class of the integration and system tests: the real service on a random port, against the shared
- * isolated test database (TQ-5). Subclasses share one Spring context, so the suite stays fast.
+ * isolated test database (TQ-5) and random test API keys. Subclasses share one Spring context, so the suite
+ * stays fast.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class IntegrationTestSupport {
 
     @DynamicPropertySource
-    static void isolatedDatabase(DynamicPropertyRegistry registry) {
+    static void isolatedDatabaseAndKeys(DynamicPropertyRegistry registry) {
         registry.add("ledger.db-path", () -> TestDatabase.shared().toString());
+        TestKeys.register(registry);
     }
 }

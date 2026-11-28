@@ -70,6 +70,19 @@ class ReportTest(unittest.TestCase):
         self.assertIn("FAIL: 1/3 steps passed", text)
 
 
+class ServerEnvTest(unittest.TestCase):
+    def test_server_gets_a_temporary_database_and_fresh_random_keys(self):
+        # Since Stage 3 the service refuses to start without API keys (SEC-5); local-check generates throwaway ones.
+        a = local_check.server_env(12345, Path("/tmp/x.db"))
+        b = local_check.server_env(12345, Path("/tmp/x.db"))
+        self.assertEqual(a["LEDGER_PORT"], "12345")
+        self.assertEqual(a["LEDGER_DB_PATH"], str(Path("/tmp/x.db")))
+        for name in ("LEDGER_CLIENT_KEYS", "LEDGER_ADMIN_KEYS"):
+            self.assertGreaterEqual(len(a[name]), 32)
+            self.assertNotEqual(a[name], b[name])
+        self.assertNotEqual(a["LEDGER_CLIENT_KEYS"], a["LEDGER_ADMIN_KEYS"])
+
+
 class MainTest(unittest.TestCase):
     def test_missing_maven_fails_with_non_zero_exit(self):
         r = subprocess.run([sys.executable, str(SCRIPT), "--mvn", "/nonexistent/mvn"], capture_output=True, text=True)
