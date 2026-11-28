@@ -28,6 +28,8 @@ jobs:
       - name: Coverage report (NFR-MAINT-2)
         if: always()
         run: python3 scripts/ci/coverage_summary.py target/site/jacoco/jacoco.csv
+      - name: simulate-transfer end to end against the built jar (SK-5)
+        run: python3 skills/simulate-transfer/scripts/simulate_transfer.py
 
   secret-scan:
     name: secret scan
