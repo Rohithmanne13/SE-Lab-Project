@@ -3,7 +3,7 @@ package edu.iiitb.team007.ledger.api;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import edu.iiitb.team007.ledger.testsupport.ApiClient;
-import edu.iiitb.team007.ledger.testsupport.ApiTestSupport;
+import edu.iiitb.team007.ledger.testsupport.IntegrationTestSupport;
 import java.io.ByteArrayInputStream;
 import java.net.http.HttpRequest;
 import java.nio.charset.StandardCharsets;
@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
  * Behaviour common to every endpoint (FR-0.1-FR-0.5, SEC-4, UI-3, TQ-SEC): authentication, roles, the error
  * format, request IDs, body size and media type, in the order of SRS 4.7.2.
  */
-class CrossCuttingApiTest extends ApiTestSupport {
+class CrossCuttingApiTest extends IntegrationTestSupport {
 
     private static final String USER_BODY = "{\"name\":\"N\",\"email\":\"n@example.com\"}";
 

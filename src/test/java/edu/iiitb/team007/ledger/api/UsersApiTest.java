@@ -4,12 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import edu.iiitb.team007.ledger.testsupport.ApiClient;
-import edu.iiitb.team007.ledger.testsupport.ApiTestSupport;
+import edu.iiitb.team007.ledger.testsupport.IntegrationTestSupport;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 /** System tests of users through HTTP (FR-1.1, FR-1.2, FR-1.9, FR-6.1, TQ-3, TQ-4). */
-class UsersApiTest extends ApiTestSupport {
+class UsersApiTest extends IntegrationTestSupport {
 
     private ApiClient.Response createUser(String json) {
         return api().post("/api/v1/users", CLIENT, json);

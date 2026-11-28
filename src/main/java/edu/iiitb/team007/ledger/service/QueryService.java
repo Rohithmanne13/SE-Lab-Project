@@ -19,11 +19,20 @@ public class QueryService {
     private final TransactionRunner transactions;
     private final WalletRepository wallets;
     private final LedgerRepository ledger;
+    private final TransactionViews views;
 
-    public QueryService(TransactionRunner transactions, WalletRepository wallets, LedgerRepository ledger) {
+    public QueryService(TransactionRunner transactions, WalletRepository wallets, LedgerRepository ledger,
+                        TransactionViews views) {
         this.transactions = transactions;
         this.wallets = wallets;
         this.ledger = ledger;
+        this.views = views;
+    }
+
+    /** A transaction with its type, amount, currency, timestamps, description and all entries (FR-6.3, FR-4.7). */
+    public TransactionView transaction(UUID transactionId) {
+        return transactions.inReadTransaction(() -> views.of(ledger.findTransaction(transactionId)
+                .orElseThrow(() -> transactionNotFound(transactionId))));
     }
 
     /** A wallet with its current balance (FR-6.1); system wallets are not visible (FR-1.5). */
@@ -44,6 +53,11 @@ public class QueryService {
 
     private Wallet clientWallet(UUID walletId) {
         return wallets.find(walletId).filter(w -> !w.system()).orElseThrow(() -> walletNotFound(walletId));
+    }
+
+    static ApiException transactionNotFound(UUID transactionId) {
+        return new ApiException(ErrorCode.TRANSACTION_NOT_FOUND,
+                "No transaction with id " + transactionId + " exists.");
     }
 
     static ApiException walletNotFound(UUID walletId) {
