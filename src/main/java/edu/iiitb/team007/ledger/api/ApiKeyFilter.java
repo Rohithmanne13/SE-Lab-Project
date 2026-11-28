@@ -17,7 +17,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 /**
- * Authentication and authorisation (FR-0.1, SEC-4, SRS 3.3.3): every request except GET /health needs an
+ * Authentication and authorisation (FR-0.1, SEC-4, SRS 3.3.3): every request except GET /health and the
+ * documentation pages (/docs, /openapi.yaml and the Swagger UI files under /webjars/) needs an
  * X-API-Key matching a configured key - missing or unknown is 401 UNAUTHENTICATED. Deposits, reversals and
  * reconciliation are ADMIN-only - a CLIENT key there is 403 FORBIDDEN. These checks run before any validation
  * (SRS 4.7.2).
@@ -40,9 +41,11 @@ public class ApiKeyFilter extends OncePerRequestFilter {
         this.problems = problems;
     }
 
-    /** Paths reachable without a key: the health check (FR-6.4). */
+    /** Paths reachable without a key: the health check (FR-6.4) and the documentation pages (UI-1). */
     static boolean isPublic(HttpServletRequest request) {
-        return "/health".equals(request.getRequestURI());
+        String path = request.getRequestURI();
+        return "/health".equals(path) || "/docs".equals(path) || "/openapi.yaml".equals(path)
+                || path.startsWith("/webjars/swagger-ui/");
     }
 
     /** True for the administrative operations (BR-5). */

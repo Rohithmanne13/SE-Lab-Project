@@ -1,0 +1,774 @@
+openapi: 3.1.0
+info:
+  title: Financial Ledger & Digital Wallet API
+  version: 0.2.0
+  summary: Per-currency wallets, idempotent transfers and a tamper-evident double-entry ledger on SQLite.
+  description: |
+    REST API of Team 007's Financial Ledger & Digital Wallet service (SE Lab, IIIT Bangalore), release 1.0 scope
+    of the SRS (docs/srs/Team007_SRS_Submission.pdf). Source of truth for clients (SE-7, CON-4, UI-1).
+
+    * Every path is under `/api/v1` except `GET /health` (SRS 1.2).
+    * Bodies are JSON, `application/json; charset=utf-8`; errors are RFC 9457 problem documents,
+      `application/problem+json` (SRS 3.3.2, 3.3.4).
+    * Money is always a JSON **integer** of minor units (paise, cents): `10050` = INR 100.50. Fractions,
+      exponents, strings and booleans are rejected (CI-2, CON-3, TQ-6).
+    * IDs are lower-case canonical UUIDs; timestamps are RFC 3339 UTC strings ending in `Z` (DR-5).
+    * Every request except `GET /health` and these documentation pages needs `X-API-Key`. Deposits, reversals
+      and reconciliation need an **ADMIN** key; a CLIENT key there gets 403 (FR-0.1, SEC-4).
+    * Deposits, transfers and reversals need an `Idempotency-Key`; a retry with the same key and body returns the
+      stored response with `Idempotent-Replayed: true` and never posts twice (FR-2.3-FR-2.9).
+    * Checks run in this order and the first failing one decides the error (SRS 4.7.2): X-Request-ID, body size
+      (413), X-API-Key (401/403), Content-Type (415), Idempotency-Key (400), path IDs (400), body (400), then the
+      operation (404/409/422/503).
+  license:
+    name: Academic project - Team 007, IIIT Bangalore
+servers:
+  - url: http://127.0.0.1:8000
+    description: Local development server (default LEDGER_HOST and LEDGER_PORT, OE-3)
+security:
+  - ApiKey: []
+tags:
+  - name: Health
+    description: Liveness and database connectivity (FR-6.4)
+  - name: Users
+    description: Users (FR-1.1, FR-1.2, FR-6.1)
+  - name: Wallets
+    description: Wallets, balances and ledger history (FR-1.3-FR-1.6, FR-6.1, FR-6.2)
+  - name: Transfers
+    description: Idempotent, concurrency-safe transfers (FR-2, FR-3)
+  - name: Transactions
+    description: Transactions and reversals (FR-4, FR-6.3)
+  - name: Admin
+    description: Ledger reconciliation (FR-5)
+
+paths:
+  /health:
+    get:
+      tags: [Health]
+      operationId: getHealth
+      summary: Liveness and database connectivity
+      description: Needs no API key and performs no write (FR-6.4).
+      security: []
+      responses:
+        '200':
+          description: Service and database usable.
+          headers:
+            X-Request-ID: {$ref: '#/components/headers/X-Request-ID'}
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Health'}
+              example: {status: ok, database: ok, version: 0.3.0}
+        '503':
+          description: The database cannot be used.
+          headers:
+            X-Request-ID: {$ref: '#/components/headers/X-Request-ID'}
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Health'}
+              example: {status: degraded, database: unavailable, version: 0.3.0}
+
+  /api/v1/users:
+    post:
+      tags: [Users]
+      operationId: createUser
+      summary: Create a user
+      description: Role CLIENT. Name 1-100 characters after trimming; email valid, at most 254 characters, unique
+        ignoring case (FR-1.1, FR-1.2).
+      parameters:
+        - $ref: '#/components/parameters/X-Request-ID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/CreateUserRequest'}
+            example: {name: Alice Example, email: alice@example.com}
+      responses:
+        '201':
+          description: Created.
+          headers:
+            Location: {$ref: '#/components/headers/Location'}
+            X-Request-ID: {$ref: '#/components/headers/X-Request-ID'}
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/User'}
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '401': {$ref: '#/components/responses/Unauthenticated'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '413': {$ref: '#/components/responses/PayloadTooLarge'}
+        '415': {$ref: '#/components/responses/UnsupportedMediaType'}
+        '500': {$ref: '#/components/responses/InternalError'}
+
+  /api/v1/users/{userId}:
+    get:
+      tags: [Users]
+      operationId: getUser
+      summary: Get a user
+      description: Role CLIENT (FR-6.1).
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+        - $ref: '#/components/parameters/X-Request-ID'
+      responses:
+        '200':
+          description: The user.
+          headers:
+            X-Request-ID: {$ref: '#/components/headers/X-Request-ID'}
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/User'}
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '401': {$ref: '#/components/responses/Unauthenticated'}
+        '404': {$ref: '#/components/responses/NotFound'}
+        '500': {$ref: '#/components/responses/InternalError'}
+
+  /api/v1/users/{userId}/wallets:
+    post:
+      tags: [Wallets]
+      operationId: createWallet
+      summary: Create a wallet in a currency
+      description: Role CLIENT. The wallet starts at balance 0; one wallet per user per currency (FR-1.3, FR-1.4).
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+        - $ref: '#/components/parameters/X-Request-ID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/CreateWalletRequest'}
+            example: {currency: INR}
+      responses:
+        '201':
+          description: Created.
+          headers:
+            Location: {$ref: '#/components/headers/Location'}
+            X-Request-ID: {$ref: '#/components/headers/X-Request-ID'}
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Wallet'}
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '401': {$ref: '#/components/responses/Unauthenticated'}
+        '404': {$ref: '#/components/responses/NotFound'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '413': {$ref: '#/components/responses/PayloadTooLarge'}
+        '415': {$ref: '#/components/responses/UnsupportedMediaType'}
+        '422': {$ref: '#/components/responses/Unprocessable'}
+        '500': {$ref: '#/components/responses/InternalError'}
+    get:
+      tags: [Wallets]
+      operationId: listWallets
+      summary: List a user's wallets
+      description: Role CLIENT; ordered by currency (FR-6.1).
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+        - $ref: '#/components/parameters/X-Request-ID'
+      responses:
+        '200':
+          description: The user's wallets.
+          headers:
+            X-Request-ID: {$ref: '#/components/headers/X-Request-ID'}
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/WalletList'}
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '401': {$ref: '#/components/responses/Unauthenticated'}
+        '404': {$ref: '#/components/responses/NotFound'}
+        '500': {$ref: '#/components/responses/InternalError'}
+
+  /api/v1/wallets/{walletId}:
+    get:
+      tags: [Wallets]
+      operationId: getWallet
+      summary: Get a wallet and its balance
+      description: Role CLIENT. System funding accounts are never returned (FR-6.1, FR-1.5).
+      parameters:
+        - $ref: '#/components/parameters/WalletId'
+        - $ref: '#/components/parameters/X-Request-ID'
+      responses:
+        '200':
+          description: The wallet with its current balance.
+          headers:
+            X-Request-ID: {$ref: '#/components/headers/X-Request-ID'}
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Wallet'}
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '401': {$ref: '#/components/responses/Unauthenticated'}
+        '404': {$ref: '#/components/responses/NotFound'}
+        '500': {$ref: '#/components/responses/InternalError'}
+
+  /api/v1/wallets/{walletId}/entries:
+    get:
+      tags: [Wallets]
+      operationId: listWalletEntries
+      summary: Paginated ledger history of a wallet
+      description: Role CLIENT. Entries in ascending sequence with the total count (FR-6.2).
+      parameters:
+        - $ref: '#/components/parameters/WalletId'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+        - $ref: '#/components/parameters/X-Request-ID'
+      responses:
+        '200':
+          description: One page of entries.
+          headers:
+            X-Request-ID: {$ref: '#/components/headers/X-Request-ID'}
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/EntryPage'}
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '401': {$ref: '#/components/responses/Unauthenticated'}
+        '404': {$ref: '#/components/responses/NotFound'}
+        '500': {$ref: '#/components/responses/InternalError'}
+
+  /api/v1/wallets/{walletId}/deposits:
+    post:
+      tags: [Wallets]
+      operationId: createDeposit
+      summary: Fund a wallet from the system funding account (ADMIN)
+      description: Role ADMIN, Idempotency-Key required. One ACID DEPOSIT transaction - DEBIT on the currency's
+        system funding account, CREDIT of the same amount on the wallet (FR-1.6). A replay with the same key and body
+        returns the stored response with `Idempotent-Replayed - true`.
+      parameters:
+        - $ref: '#/components/parameters/WalletId'
+        - $ref: '#/components/parameters/Idempotency-Key'
+        - $ref: '#/components/parameters/X-Request-ID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/DepositRequest'}
+            example: {amount: 50000, currency: INR, description: Initial funding}
+      responses:
+        '201': {$ref: '#/components/responses/TransactionCreated'}
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '401': {$ref: '#/components/responses/Unauthenticated'}
+        '403': {$ref: '#/components/responses/Forbidden'}
+        '404': {$ref: '#/components/responses/NotFound'}
+        '413': {$ref: '#/components/responses/PayloadTooLarge'}
+        '415': {$ref: '#/components/responses/UnsupportedMediaType'}
+        '422': {$ref: '#/components/responses/Unprocessable'}
+        '500': {$ref: '#/components/responses/InternalError'}
+        '503': {$ref: '#/components/responses/ServiceBusy'}
+
+  /api/v1/transfers:
+    post:
+      tags: [Transfers]
+      operationId: createTransfer
+      summary: Transfer between two wallets
+      description: Role CLIENT, Idempotency-Key required. One ACID TRANSFER transaction with exactly two entries -
+        DEBIT on the source, CREDIT on the destination - executed one at a time under the database write lock
+        (FR-2, FR-3). A replay with the same key and body returns the stored response with
+        `Idempotent-Replayed - true`; the same key with another body is 422 IDEMPOTENCY_KEY_REUSED.
+      parameters:
+        - $ref: '#/components/parameters/Idempotency-Key'
+        - $ref: '#/components/parameters/X-Request-ID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/TransferRequest'}
+            example:
+              source_wallet_id: 3f0c2b1a-9d4e-4c7a-8b2f-1e5d6a7b8c9d
+              destination_wallet_id: 9a8b7c6d-5e4f-4a3b-9c2d-1e0f9a8b7c6d
+              amount: 12550
+              currency: INR
+              description: Dinner
+      responses:
+        '201': {$ref: '#/components/responses/TransactionCreated'}
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '401': {$ref: '#/components/responses/Unauthenticated'}
+        '404': {$ref: '#/components/responses/NotFound'}
+        '413': {$ref: '#/components/responses/PayloadTooLarge'}
+        '415': {$ref: '#/components/responses/UnsupportedMediaType'}
+        '422': {$ref: '#/components/responses/Unprocessable'}
+        '500': {$ref: '#/components/responses/InternalError'}
+        '503': {$ref: '#/components/responses/ServiceBusy'}
+
+  /api/v1/transactions/{transactionId}:
+    get:
+      tags: [Transactions]
+      operationId: getTransaction
+      summary: A transaction with its entries
+      description: Role CLIENT. Shows reversed_by_transaction_id on a reversed transaction and
+        reverses_transaction_id on a reversal (FR-6.3, FR-4.7). There is no PUT, PATCH or DELETE (FR-4.1).
+      parameters:
+        - $ref: '#/components/parameters/TransactionId'
+        - $ref: '#/components/parameters/X-Request-ID'
+      responses:
+        '200':
+          description: The transaction.
+          headers:
+            X-Request-ID: {$ref: '#/components/headers/X-Request-ID'}
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Transaction'}
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '401': {$ref: '#/components/responses/Unauthenticated'}
+        '404': {$ref: '#/components/responses/NotFound'}
+        '500': {$ref: '#/components/responses/InternalError'}
+
+  /api/v1/transactions/{transactionId}/reversal:
+    post:
+      tags: [Transactions]
+      operationId: createReversal
+      summary: Reverse a completed transaction (ADMIN)
+      description: Role ADMIN, Idempotency-Key required. A new REVERSAL transaction with, for every original entry,
+        an entry with the same wallet and amount and the opposite direction; the original never changes (FR-4.5).
+        At most once per transaction (409); a REVERSAL is not reversible (422); a reversal that would make a
+        non-system wallet negative is 422 INSUFFICIENT_FUNDS (FR-4.6).
+      parameters:
+        - $ref: '#/components/parameters/TransactionId'
+        - $ref: '#/components/parameters/Idempotency-Key'
+        - $ref: '#/components/parameters/X-Request-ID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/ReversalRequest'}
+            example: {reason: Customer dispute}
+      responses:
+        '201': {$ref: '#/components/responses/TransactionCreated'}
+        '400': {$ref: '#/components/responses/BadRequest'}
+        '401': {$ref: '#/components/responses/Unauthenticated'}
+        '403': {$ref: '#/components/responses/Forbidden'}
+        '404': {$ref: '#/components/responses/NotFound'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '413': {$ref: '#/components/responses/PayloadTooLarge'}
+        '415': {$ref: '#/components/responses/UnsupportedMediaType'}
+        '422': {$ref: '#/components/responses/Unprocessable'}
+        '500': {$ref: '#/components/responses/InternalError'}
+        '503': {$ref: '#/components/responses/ServiceBusy'}
+
+  /api/v1/admin/reconciliation:
+    get:
+      tags: [Admin]
+      operationId: runReconciliation
+      summary: Run reconciliation and return the report (ADMIN)
+      description: Role ADMIN. Read-only, one consistent snapshot - verifies debits = credits per currency and in
+        total, every transaction balanced with at least two entries in one currency, every stored balance equal to
+        its entries, no negative non-system wallet, and the hash chain with no sequence gaps (FR-5). A FAILED report
+        is still returned with 200.
+      parameters:
+        - $ref: '#/components/parameters/X-Request-ID'
+      responses:
+        '200':
+          description: The report, PASSED or FAILED.
+          headers:
+            X-Request-ID: {$ref: '#/components/headers/X-Request-ID'}
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ReconciliationReport'}
+        '401': {$ref: '#/components/responses/Unauthenticated'}
+        '403': {$ref: '#/components/responses/Forbidden'}
+        '500': {$ref: '#/components/responses/InternalError'}
+
+components:
+  securitySchemes:
+    ApiKey:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: A configured CLIENT or ADMIN key (LEDGER_CLIENT_KEYS, LEDGER_ADMIN_KEYS), at least 32
+        characters. Missing or unknown - 401 UNAUTHENTICATED; CLIENT key on an ADMIN operation - 403 FORBIDDEN.
+
+  parameters:
+    UserId:
+      name: userId
+      in: path
+      required: true
+      description: A user ID; not a well-formed UUID - 400 INVALID_ID.
+      schema: {$ref: '#/components/schemas/Uuid'}
+    WalletId:
+      name: walletId
+      in: path
+      required: true
+      description: A wallet ID; not a well-formed UUID - 400 INVALID_ID.
+      schema: {$ref: '#/components/schemas/Uuid'}
+    TransactionId:
+      name: transactionId
+      in: path
+      required: true
+      description: A transaction ID; not a well-formed UUID - 400 INVALID_ID.
+      schema: {$ref: '#/components/schemas/Uuid'}
+    Idempotency-Key:
+      name: Idempotency-Key
+      in: header
+      required: true
+      description: One logical money-moving request; 8-128 characters of A-Z a-z 0-9 - _ (a UUID v4 is
+        recommended). Missing - 400 IDEMPOTENCY_KEY_MISSING; malformed - 400 IDEMPOTENCY_KEY_INVALID. Keys are
+        unique across deposits, transfers and reversals and kept forever (FR-2.9).
+      schema:
+        type: string
+        minLength: 8
+        maxLength: 128
+        pattern: '^[A-Za-z0-9_-]{8,128}$'
+    X-Request-ID:
+      name: X-Request-ID
+      in: header
+      required: false
+      description: Optional request ID of 1-64 printable ASCII characters; echoed, otherwise one is generated
+        (FR-0.4).
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 64
+        pattern: '^[\x20-\x7E]{1,64}$'
+    Limit:
+      name: limit
+      in: query
+      required: false
+      description: Page size, 1-100 (FR-6.2).
+      schema: {type: integer, minimum: 1, maximum: 100, default: 50}
+    Offset:
+      name: offset
+      in: query
+      required: false
+      description: Entries to skip, 0 or more (FR-6.2).
+      schema: {type: integer, minimum: 0, default: 0}
+
+  headers:
+    X-Request-ID:
+      description: The request ID, on every response (FR-0.4).
+      schema: {type: string}
+    Location:
+      description: Path of the created resource (CI-3).
+      schema: {type: string}
+    Idempotent-Replayed:
+      description: Present with value true when the response is a replay of the stored response (CI-4).
+      schema: {type: string, enum: ['true']}
+    Retry-After:
+      description: Seconds to wait before retrying (FR-3.6).
+      schema: {type: integer}
+
+  responses:
+    TransactionCreated:
+      description: Created - or, with Idempotent-Replayed true, the byte-identical stored response of the first
+        request with this key (FR-2.6, NFR-REL-4).
+      headers:
+        Location: {$ref: '#/components/headers/Location'}
+        Idempotent-Replayed: {$ref: '#/components/headers/Idempotent-Replayed'}
+        X-Request-ID: {$ref: '#/components/headers/X-Request-ID'}
+      content:
+        application/json:
+          schema: {$ref: '#/components/schemas/Transaction'}
+    BadRequest:
+      description: VALIDATION_ERROR, INVALID_ID, IDEMPOTENCY_KEY_MISSING or IDEMPOTENCY_KEY_INVALID.
+      content:
+        application/problem+json:
+          schema: {$ref: '#/components/schemas/Problem'}
+          example:
+            type: https://github.com/Rohithmanne13/SE-Lab-Project/blob/main/docs/design/error-codes.md#validation_error
+            title: Invalid request
+            status: 400
+            detail: One field of the request body is invalid; see errors.
+            code: VALIDATION_ERROR
+            request_id: 6b1f2c4e-6d5a-4b8e-9c1f-2a7d3e9b0c11
+            errors:
+              - {field: amount, message: must be a JSON integer (no quotes, fraction or exponent)}
+    Unauthenticated:
+      description: UNAUTHENTICATED - X-API-Key missing or unknown.
+      content:
+        application/problem+json:
+          schema: {$ref: '#/components/schemas/Problem'}
+    Forbidden:
+      description: FORBIDDEN - a CLIENT key on an ADMIN operation.
+      content:
+        application/problem+json:
+          schema: {$ref: '#/components/schemas/Problem'}
+    NotFound:
+      description: USER_NOT_FOUND, WALLET_NOT_FOUND or TRANSACTION_NOT_FOUND - a well-formed ID that does not exist
+        (or names a system account).
+      content:
+        application/problem+json:
+          schema: {$ref: '#/components/schemas/Problem'}
+    Conflict:
+      description: EMAIL_ALREADY_EXISTS, WALLET_ALREADY_EXISTS or TRANSACTION_ALREADY_REVERSED.
+      content:
+        application/problem+json:
+          schema: {$ref: '#/components/schemas/Problem'}
+    PayloadTooLarge:
+      description: PAYLOAD_TOO_LARGE - body larger than 16 KiB (FR-0.5).
+      content:
+        application/problem+json:
+          schema: {$ref: '#/components/schemas/Problem'}
+    UnsupportedMediaType:
+      description: UNSUPPORTED_MEDIA_TYPE - a POST without Content-Type application/json.
+      content:
+        application/problem+json:
+          schema: {$ref: '#/components/schemas/Problem'}
+    Unprocessable:
+      description: INSUFFICIENT_FUNDS, CURRENCY_MISMATCH, SAME_WALLET_TRANSFER, UNSUPPORTED_CURRENCY,
+        TRANSACTION_NOT_REVERSIBLE, IDEMPOTENCY_KEY_REUSED or AMOUNT_LIMIT_EXCEEDED. Nothing was changed.
+      content:
+        application/problem+json:
+          schema: {$ref: '#/components/schemas/Problem'}
+          example:
+            type: https://github.com/Rohithmanne13/SE-Lab-Project/blob/main/docs/design/error-codes.md#insufficient_funds
+            title: Insufficient funds
+            status: 422
+            detail: Wallet 3f0c2b1a-9d4e-4c7a-8b2f-1e5d6a7b8c9d holds 400 but the transfer needs 600; nothing was
+              changed.
+            code: INSUFFICIENT_FUNDS
+            request_id: 6b1f2c4e-6d5a-4b8e-9c1f-2a7d3e9b0c11
+    InternalError:
+      description: INTERNAL_ERROR - an unexpected fault; the transaction was rolled back and nothing persisted.
+      content:
+        application/problem+json:
+          schema: {$ref: '#/components/schemas/Problem'}
+    ServiceBusy:
+      description: SERVICE_BUSY - the write lock was not obtained within 5000 ms; nothing persisted (FR-3.6).
+      headers:
+        Retry-After: {$ref: '#/components/headers/Retry-After'}
+      content:
+        application/problem+json:
+          schema: {$ref: '#/components/schemas/Problem'}
+
+  schemas:
+    Uuid:
+      type: string
+      format: uuid
+      description: Canonical UUID text (RFC 9562), returned in lower case.
+      pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+      example: 3f0c2b1a-9d4e-4c7a-8b2f-1e5d6a7b8c9d
+    Timestamp:
+      type: string
+      format: date-time
+      description: RFC 3339 UTC with milliseconds, ending in Z (DR-5).
+      example: '2026-11-23T10:15:30.123Z'
+    Currency:
+      type: string
+      pattern: '^[A-Z]{3}$'
+      description: Upper-case three-letter ISO 4217 code. Supported by default - INR and USD (LEDGER_CURRENCIES);
+        another well-formed code is 422 UNSUPPORTED_CURRENCY (FR-1.3).
+      example: INR
+    Amount:
+      type: integer
+      format: int64
+      minimum: 1
+      maximum: 9007199254740991
+      description: Integer minor units (paise, cents), 1 to 2^53 - 1; never a fraction, exponent, string or
+        boolean (FR-2.1, CI-2, TQ-6).
+      example: 12550
+    Balance:
+      type: integer
+      format: int64
+      minimum: 0
+      maximum: 9007199254740991
+      description: Integer minor units; Sum of CREDIT minus sum of DEBIT entries of the wallet (FR-1.7).
+    Health:
+      type: object
+      required: [status, database, version]
+      properties:
+        status: {type: string, enum: [ok, degraded]}
+        database: {type: string, enum: [ok, unavailable]}
+        version: {type: string, description: Release version.}
+    CreateUserRequest:
+      type: object
+      additionalProperties: false
+      required: [name, email]
+      properties:
+        name:
+          type: string
+          minLength: 1
+          description: 1-100 characters after trimming (leading and trailing spaces are removed).
+        email:
+          type: string
+          format: email
+          maxLength: 254
+          description: Syntactically valid (HTML "valid email address" form with a dot in the domain); unique
+            ignoring case.
+    User:
+      type: object
+      required: [user_id, name, email, created_at]
+      properties:
+        user_id: {$ref: '#/components/schemas/Uuid'}
+        name: {type: string}
+        email: {type: string}
+        created_at: {$ref: '#/components/schemas/Timestamp'}
+    CreateWalletRequest:
+      type: object
+      additionalProperties: false
+      required: [currency]
+      properties:
+        currency: {$ref: '#/components/schemas/Currency'}
+    Wallet:
+      type: object
+      required: [wallet_id, user_id, currency, balance, created_at]
+      properties:
+        wallet_id: {$ref: '#/components/schemas/Uuid'}
+        user_id: {$ref: '#/components/schemas/Uuid'}
+        currency: {$ref: '#/components/schemas/Currency'}
+        balance: {$ref: '#/components/schemas/Balance'}
+        created_at: {$ref: '#/components/schemas/Timestamp'}
+    WalletList:
+      type: object
+      required: [user_id, wallets]
+      properties:
+        user_id: {$ref: '#/components/schemas/Uuid'}
+        wallets:
+          type: array
+          items: {$ref: '#/components/schemas/Wallet'}
+    Entry:
+      type: object
+      description: One immutable ledger entry (FR-4.3). entry_hash = SHA-256 of prev_hash + newline + sequence,
+        entry_id, transaction_id, wallet_id, direction, amount, currency and created_at joined by pipes (FR-4.4,
+        ADR-0003).
+      required: [entry_id, sequence, transaction_id, wallet_id, direction, amount, currency, created_at, prev_hash,
+        entry_hash]
+      properties:
+        entry_id: {$ref: '#/components/schemas/Uuid'}
+        sequence: {type: integer, format: int64, minimum: 1, description: Global, strictly increasing, gap-free.}
+        transaction_id: {$ref: '#/components/schemas/Uuid'}
+        wallet_id:
+          description: The wallet; null for the entry on a system funding account, whose ID is never returned
+            (FR-1.5).
+          oneOf:
+            - {$ref: '#/components/schemas/Uuid'}
+            - {type: 'null'}
+        direction: {type: string, enum: [DEBIT, CREDIT]}
+        amount: {$ref: '#/components/schemas/Amount'}
+        currency: {$ref: '#/components/schemas/Currency'}
+        created_at: {$ref: '#/components/schemas/Timestamp'}
+        prev_hash: {type: string, pattern: '^[0-9a-f]{64}$', description: 64 zeros for the first entry.}
+        entry_hash: {type: string, pattern: '^[0-9a-f]{64}$'}
+    EntryPage:
+      type: object
+      required: [wallet_id, entries, total_count, limit, offset]
+      properties:
+        wallet_id: {$ref: '#/components/schemas/Uuid'}
+        entries:
+          type: array
+          items: {$ref: '#/components/schemas/Entry'}
+        total_count: {type: integer, format: int64, minimum: 0}
+        limit: {type: integer, minimum: 1, maximum: 100}
+        offset: {type: integer, minimum: 0}
+    DepositRequest:
+      type: object
+      additionalProperties: false
+      required: [amount, currency]
+      properties:
+        amount: {$ref: '#/components/schemas/Amount'}
+        currency: {$ref: '#/components/schemas/Currency'}
+        description: {type: string, maxLength: 255}
+    TransferRequest:
+      type: object
+      additionalProperties: false
+      required: [source_wallet_id, destination_wallet_id, amount, currency]
+      properties:
+        source_wallet_id: {$ref: '#/components/schemas/Uuid'}
+        destination_wallet_id: {$ref: '#/components/schemas/Uuid'}
+        amount: {$ref: '#/components/schemas/Amount'}
+        currency:
+          $ref: '#/components/schemas/Currency'
+          description: Must equal the currency of both wallets (BR-2).
+        description: {type: string, maxLength: 255}
+    ReversalRequest:
+      type: object
+      additionalProperties: false
+      required: [reason]
+      properties:
+        reason: {type: string, minLength: 1, maxLength: 255}
+    Transaction:
+      type: object
+      description: A ledger transaction (FR-2.2). source_wallet_id is the wallet debited and destination_wallet_id
+        the wallet credited; either is null when it is a system funding account. For a REVERSAL, description holds
+        the reason.
+      required: [transaction_id, type, status, source_wallet_id, destination_wallet_id, amount, currency,
+        description, reverses_transaction_id, reversed_by_transaction_id, created_at, entries]
+      properties:
+        transaction_id: {$ref: '#/components/schemas/Uuid'}
+        type: {type: string, enum: [DEPOSIT, TRANSFER, REVERSAL]}
+        status: {type: string, enum: [COMPLETED]}
+        source_wallet_id:
+          oneOf:
+            - {$ref: '#/components/schemas/Uuid'}
+            - {type: 'null'}
+        destination_wallet_id:
+          oneOf:
+            - {$ref: '#/components/schemas/Uuid'}
+            - {type: 'null'}
+        amount: {$ref: '#/components/schemas/Amount'}
+        currency: {$ref: '#/components/schemas/Currency'}
+        description: {type: [string, 'null'], maxLength: 255}
+        reverses_transaction_id:
+          description: Set on a REVERSAL - the transaction it reverses (FR-4.5).
+          oneOf:
+            - {$ref: '#/components/schemas/Uuid'}
+            - {type: 'null'}
+        reversed_by_transaction_id:
+          description: Set on a transaction that has been reversed (FR-4.7).
+          oneOf:
+            - {$ref: '#/components/schemas/Uuid'}
+            - {type: 'null'}
+        created_at: {$ref: '#/components/schemas/Timestamp'}
+        entries:
+          type: array
+          minItems: 2
+          items: {$ref: '#/components/schemas/Entry'}
+    ReconciliationReport:
+      type: object
+      description: FR-5.6. status is PASSED only if every check passes.
+      required: [status, checked_at, transactions_checked, entries_checked, wallets_checked, total_debits,
+        total_credits, totals, discrepancies]
+      properties:
+        status: {type: string, enum: [PASSED, FAILED]}
+        checked_at: {$ref: '#/components/schemas/Timestamp'}
+        transactions_checked: {type: integer, format: int64, minimum: 0}
+        entries_checked: {type: integer, format: int64, minimum: 0}
+        wallets_checked: {type: integer, format: int64, minimum: 0}
+        total_debits: {type: integer, format: int64, minimum: 0}
+        total_credits: {type: integer, format: int64, minimum: 0}
+        totals:
+          type: array
+          description: Per currency (FR-5.2).
+          items:
+            type: object
+            required: [currency, total_debits, total_credits]
+            properties:
+              currency: {$ref: '#/components/schemas/Currency'}
+              total_debits: {type: integer, format: int64, minimum: 0}
+              total_credits: {type: integer, format: int64, minimum: 0}
+        discrepancies:
+          type: array
+          items: {$ref: '#/components/schemas/Discrepancy'}
+    Discrepancy:
+      type: object
+      required: [check, currency, wallet_id, transaction_id, entry_id, expected, actual]
+      properties:
+        check:
+          type: string
+          enum: [LEDGER_BALANCED, CURRENCY_BALANCED, TRANSACTION_ENTRY_COUNT, TRANSACTION_SINGLE_CURRENCY,
+            TRANSACTION_BALANCED, WALLET_BALANCE, WALLET_NOT_NEGATIVE, SEQUENCE_GAP, PREV_HASH, ENTRY_HASH]
+        currency: {type: [string, 'null']}
+        wallet_id: {type: [string, 'null']}
+        transaction_id: {type: [string, 'null']}
+        entry_id: {type: [string, 'null']}
+        expected:
+          type: [integer, string]
+          description: Money values and sequences are integers; hashes and text are strings.
+        actual: {type: [integer, string]}
+    Problem:
+      type: object
+      description: RFC 9457 problem document (SRS 3.3.4, ADR-0004). Never contains stack traces, SQL or file paths.
+      required: [type, title, status, detail, code, request_id]
+      properties:
+        type: {type: string, format: uri, description: Link to the code's entry in docs/design/error-codes.md.}
+        title: {type: string}
+        status: {type: integer}
+        detail: {type: string, description: One sentence telling the caller what to correct.}
+        code:
+          type: string
+          enum: [VALIDATION_ERROR, INVALID_ID, IDEMPOTENCY_KEY_MISSING, IDEMPOTENCY_KEY_INVALID, UNAUTHENTICATED,
+            FORBIDDEN, USER_NOT_FOUND, WALLET_NOT_FOUND, TRANSACTION_NOT_FOUND, EMAIL_ALREADY_EXISTS,
+            WALLET_ALREADY_EXISTS, TRANSACTION_ALREADY_REVERSED, PAYLOAD_TOO_LARGE, UNSUPPORTED_MEDIA_TYPE,
+            INSUFFICIENT_FUNDS, CURRENCY_MISMATCH, SAME_WALLET_TRANSFER, UNSUPPORTED_CURRENCY,
+            TRANSACTION_NOT_REVERSIBLE, IDEMPOTENCY_KEY_REUSED, AMOUNT_LIMIT_EXCEEDED, INTERNAL_ERROR, SERVICE_BUSY]
+        request_id: {type: string}
+        errors:
+          type: array
+          description: Only for VALIDATION_ERROR - the offending fields.
+          items:
+            type: object
+            required: [field, message]
+            properties:
+              field: {type: string}
+              message: {type: string}

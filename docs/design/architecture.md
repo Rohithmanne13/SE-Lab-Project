@@ -193,7 +193,7 @@ All paths below are under `/api/v1` except `/health` (SRS 1.2, 3.3.2).
 | `POST /transactions/{transactionId}/reversal` | `TransactionController` -> `ReversalService` | ADMIN | FR-4.5, FR-4.6 |
 | `GET /admin/reconciliation` | `AdminController` -> `ReconciliationService` | ADMIN | FR-5 |
 
-The full contract (schemas, headers, examples) is written as `docs/api/openapi.yaml` in Stage 3 (SE-7, UI-1).
+The full contract (schemas, headers, examples) is `docs/api/openapi.yaml` (OpenAPI 3.1), rendered by Swagger UI at `/docs` and checked against the code by `OpenApiContractTest` (SE-7, UI-1).
 
 ## 6. Configuration (OE-3, DR-6, SEC-5)
 
@@ -204,9 +204,10 @@ All configuration comes from environment variables; nothing secret is in the rep
 | `LEDGER_HOST` | bind address | `127.0.0.1` |
 | `LEDGER_PORT` | HTTP port | `8000` |
 | `LEDGER_DB_PATH` | SQLite database file | `data/ledger.db` |
-| `LEDGER_CLIENT_KEYS` | comma-separated CLIENT API keys (>= 32 random characters each) | none - required from Stage 3 |
-| `LEDGER_ADMIN_KEYS` | comma-separated ADMIN API keys | none - required from Stage 3 |
+| `LEDGER_CLIENT_KEYS` | comma-separated CLIENT API keys (>= 32 random characters each) | none - required; the service does not start without one |
+| `LEDGER_ADMIN_KEYS` | comma-separated ADMIN API keys | none - required |
 | `LEDGER_CURRENCIES` | supported ISO 4217 codes | `INR,USD` |
+| `LEDGER_DOCS_ENABLED` | serve Swagger UI at `/docs` and the contract at `/openapi.yaml` (development mode, UI-1) | `true` |
 
 Tests set `LEDGER_DB_PATH` to a fresh temporary file (TQ-5, NFR-SAFE-5).
 
