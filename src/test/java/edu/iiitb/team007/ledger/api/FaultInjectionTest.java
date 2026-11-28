@@ -114,6 +114,23 @@ class FaultInjectionTest extends ApiTestSupport {
     }
 
     @Test
+    void reversalFailingAfterTheDebitEntryPersistsNothing() {
+        String a = newWallet("INR");
+        String b = newWallet("INR");
+        fund(a, 300, "INR");
+        String original = transfer(a, b, 300, "INR", newKey()).json().get("transaction_id").asText();
+        long entries = count("ledger_entries");
+        failAfterDebit.set(true);
+        assertProblem(reverse(original, "fault test", newKey()), 500, "INTERNAL_ERROR");
+        assertThat(count("ledger_entries")).isEqualTo(entries);
+        assertThat(balance(a)).isZero();
+        assertThat(balance(b)).isEqualTo(300);
+        failAfterDebit.set(false);
+        assertThat(reverse(original, "fault test", newKey()).status()).isEqualTo(201);
+        assertThat(balance(a)).isEqualTo(300);
+    }
+
+    @Test
     void internalErrorsRevealNoInternals() {
         String a = newWallet("INR");
         failAfterDebit.set(true);
