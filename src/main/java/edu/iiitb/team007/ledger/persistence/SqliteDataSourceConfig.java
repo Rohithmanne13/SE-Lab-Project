@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +24,9 @@ public class SqliteDataSourceConfig {
     /** Busy timeout in milliseconds; at least 5000 per SI-2 and FR-3.6. */
     public static final int BUSY_TIMEOUT_MS = 5000;
 
+    /** Open connections kept for reuse; each one carries the settings above. */
+    public static final int POOL_SIZE = 20;
+
     @Bean
     public DataSource dataSource(LedgerProperties properties) {
         Path file = Path.of(properties.dbPath()).toAbsolutePath();
@@ -38,8 +43,12 @@ public class SqliteDataSourceConfig {
         config.setSynchronous(SQLiteConfig.SynchronousMode.FULL);
         config.setBusyTimeout(BUSY_TIMEOUT_MS);
         config.setTransactionMode(SQLiteConfig.TransactionMode.IMMEDIATE);
-        SQLiteDataSource dataSource = new SQLiteDataSource(config);
-        dataSource.setUrl("jdbc:sqlite:" + file);
-        return dataSource;
+        SQLiteDataSource sqlite = new SQLiteDataSource(config);
+        sqlite.setUrl("jdbc:sqlite:" + file);
+        HikariConfig pool = new HikariConfig();
+        pool.setDataSource(sqlite);
+        pool.setPoolName("ledger-sqlite");
+        pool.setMaximumPoolSize(POOL_SIZE);
+        return new HikariDataSource(pool);
     }
 }

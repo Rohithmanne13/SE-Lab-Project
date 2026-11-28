@@ -231,6 +231,7 @@ A deployment beyond localhost must sit behind TLS 1.2+ (CI-1); it is out of scop
 - **Security (SEC-1-SEC-9):** filters enforce authentication and roles before validation; all SQL is parameterised; errors reveal no internals; keys come only from the environment.
 - **Money (CON-3, NFR-REL-3, NFR-REL-6):** every amount and balance is a Java `long` of minor units, never `double`; additions check against 9 007 199 254 740 991 before writing.
 - **Time (DR-5, AS-4):** `created_at` values come from the injected `Clock`, stored as RFC 3339 UTC strings with milliseconds; ordering uses `sequence`, not time.
+- **Connections (NFR-PERF-1):** the SQLite connections of ADR-0002 decision 1 are kept in a pool of 20 (HikariCP, part of Spring Boot) instead of being opened for every unit of work; each pooled connection carries the SI-2 settings (defect D5 in `docs/testing/defect-log.md`).
 - **Migrations (SI-4):** versioned SQL scripts in `src/main/resources/db/migration/` (`V1__schema.sql`, ...) applied at start-up by `MigrationRunner`, which records applied versions in a `schema_version` table.
 
 ## 9. Traceability of this design

@@ -4,14 +4,17 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Comparator;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 /**
- * Isolated test databases (TQ-5, NFR-SAFE-5): every test run uses fresh files under target/test-db/, never the
- * production database file.
+ * Isolated test databases (TQ-5, NFR-SAFE-5): every test run uses fresh files in a new folder of the system
+ * temporary directory - on a local disk (AS-1), never the production database file - deleted when the run ends.
  */
 public final class TestDatabase {
 
+    private static final Path RUN_DIR = createRunDir();
     private static final Path SHARED = fresh("shared");
 
     private TestDatabase() {
@@ -25,11 +28,28 @@ public final class TestDatabase {
     /** A new, empty database file path for tests that need their own database. */
     public static Path fresh(String name) {
         try {
-            Path dir = Path.of("target", "test-db", UUID.randomUUID().toString()).toAbsolutePath();
-            Files.createDirectories(dir);
+            Path dir = Files.createDirectories(RUN_DIR.resolve(UUID.randomUUID().toString()));
             return dir.resolve(name + ".db");
         } catch (IOException e) {
             throw new UncheckedIOException(e);
+        }
+    }
+
+    private static Path createRunDir() {
+        try {
+            Path dir = Files.createTempDirectory("ledger-tests-");
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> deleteQuietly(dir)));
+            return dir;
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    private static void deleteQuietly(Path dir) {
+        try (Stream<Path> files = Files.walk(dir)) {
+            files.sorted(Comparator.reverseOrder()).forEach(p -> p.toFile().delete());
+        } catch (IOException e) {
+            // best effort: the operating system clears its temporary directory anyway
         }
     }
 }
