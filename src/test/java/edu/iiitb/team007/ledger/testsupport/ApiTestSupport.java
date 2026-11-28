@@ -2,7 +2,9 @@ package edu.iiitb.team007.ledger.testsupport;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import java.util.UUID;
+import org.junit.jupiter.api.AfterEach;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
@@ -22,6 +24,33 @@ public abstract class ApiTestSupport {
 
     protected ApiClient api() {
         return new ApiClient(port);
+    }
+
+    /** NFR-REL-1: reconciliation reports PASSED after every automated test scenario. */
+    @AfterEach
+    void reconciliationPassesAfterEveryTest() {
+        if (reconcileAfterEachTest()) {
+            JsonNode report = reconcile();
+            assertThat(report.get("status").asText()).as(report.toString()).isEqualTo("PASSED");
+        }
+    }
+
+    /** Tests that deliberately corrupt the ledger switch the check off. */
+    protected boolean reconcileAfterEachTest() {
+        return true;
+    }
+
+    /** GET /admin/reconciliation with the ADMIN key; returns the report. */
+    protected JsonNode reconcile() {
+        ApiClient.Response r = api().get("/api/v1/admin/reconciliation", ADMIN);
+        assertThat(r.status()).as(r.body()).isEqualTo(200);
+        return r.json();
+    }
+
+    /** ADMIN reversal of a transaction; returns the response. */
+    protected ApiClient.Response reverse(String transactionId, String reason, String key) {
+        return api().post("/api/v1/transactions/" + transactionId + "/reversal", ADMIN,
+                "{\"reason\":\"" + reason + "\"}", "Idempotency-Key", key);
     }
 
     protected static String uniqueEmail() {
