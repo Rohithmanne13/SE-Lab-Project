@@ -132,3 +132,11 @@ Example:
 ## SERVICE_BUSY
 
 503. The database write lock could not be acquired within the busy timeout (5000 ms). Nothing was persisted; retry after the number of seconds in `Retry-After` (FR-3.6).
+
+## Responses outside the API operations
+
+A path that the API does not define (404), a method that a path does not support (405, with an `Allow` header) and an
+`Accept` header that excludes JSON (406) are not error conditions of SRS 3.3.4. They are still RFC 9457 problem
+documents with `request_id`, but with `type` `about:blank` - whose `title` is the HTTP status phrase (RFC 9457 4.2.1)
+- and no `code`. For example `DELETE /api/v1/transactions/{transactionId}` is 405: no operation updates or deletes a
+transaction or entry (FR-4.1).

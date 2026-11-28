@@ -47,7 +47,10 @@ public class SqliteTransactionRunner implements TransactionRunner {
                 T result = work.get();
                 execute(connection, "COMMIT");
                 return result;
-            } catch (RuntimeException | Error e) {
+            } catch (RuntimeException e) {
+                rollbackQuietly(connection);
+                throw SqliteErrors.isBusy(e) ? busy() : e;
+            } catch (Error e) {
                 rollbackQuietly(connection);
                 throw e;
             } finally {
@@ -76,10 +79,15 @@ public class SqliteTransactionRunner implements TransactionRunner {
 
     private static RuntimeException translate(SQLException e) {
         if (SqliteErrors.isBusy(e)) {
-            return new ApiException(ErrorCode.SERVICE_BUSY,
-                    "The ledger is busy with other requests; nothing was changed - retry after the Retry-After delay.");
+            return busy();
         }
         return new IllegalStateException("Database operation failed", e);
+    }
+
+    /** 503 SERVICE_BUSY: the write lock was not obtained within the busy timeout; nothing was written (FR-3.6). */
+    private static ApiException busy() {
+        return new ApiException(ErrorCode.SERVICE_BUSY,
+                "The ledger is busy with other requests; nothing was changed - retry after the Retry-After delay.");
     }
 
     private static void rollbackQuietly(Connection connection) {

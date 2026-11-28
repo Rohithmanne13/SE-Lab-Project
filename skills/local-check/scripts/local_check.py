@@ -6,7 +6,8 @@ Steps, in order:
   2. tests      - Maven -B test, then python3 -m unittest discover -s tests
   Maven is the repository's Maven Wrapper (sh ./mvnw / mvnw.cmd) unless --mvn names another command.
   3. server     - start target/financial-ledger-api.jar on a free local port, with a throwaway
-                  database file (never the real one, NFR-SAFE-5), and wait until it answers
+                  database file (never the real one, NFR-SAFE-5) and throwaway random API keys
+                  (never printed or logged, SEC-5), and wait until it answers
   4. fetch      - GET /health (read-only) must return 200 with status "ok" and database "ok"
   5. report     - PASS or FAIL per step (UI-4); the server is always stopped; exit status 1 if any
                   step failed. With --by "<member>" the run is also logged in brain/log.md (SB-0).
@@ -22,6 +23,7 @@ import datetime as dt
 import json
 import os
 import platform
+import secrets
 import shutil
 import socket
 import subprocess
@@ -54,6 +56,12 @@ def maven_command(override: str) -> list[str] | None:
         return [shutil.which("sh"), str(REPO / "mvnw")]
     found = shutil.which("mvn")
     return [found] if found else None
+
+
+def server_env(port: int, db_file: Path) -> dict[str, str]:
+    """Environment for the throwaway server: local port, temporary database, fresh random API keys (SEC-5)."""
+    return dict(os.environ, LEDGER_HOST="127.0.0.1", LEDGER_PORT=str(port), LEDGER_DB_PATH=str(db_file),
+                LEDGER_CLIENT_KEYS=secrets.token_urlsafe(32), LEDGER_ADMIN_KEYS=secrets.token_urlsafe(32))
 
 
 def run(cmd: list[str], log_file: Path) -> tuple[bool, str]:
@@ -154,8 +162,7 @@ def main(argv: list[str]) -> int:
             results.append(("tests", None, "skipped - build failed"))
         if results[0][1]:
             port = a.port or free_port()
-            env = dict(os.environ, LEDGER_HOST="127.0.0.1", LEDGER_PORT=str(port),
-                       LEDGER_DB_PATH=str(work / "local-check.db"))
+            env = server_env(port, work / "local-check.db")
             with log_file.open("a", encoding="utf-8") as fh:
                 proc = subprocess.Popen(["java", "-jar", str(JAR)], cwd=REPO, env=env,
                                         stdout=fh, stderr=subprocess.STDOUT)

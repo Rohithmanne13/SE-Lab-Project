@@ -2,6 +2,7 @@ package edu.iiitb.team007.ledger.persistence;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import edu.iiitb.team007.ledger.testsupport.TestKeys;
 import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -24,6 +25,7 @@ class SqliteConnectionSettingsTest {
     @DynamicPropertySource
     static void isolatedDatabase(DynamicPropertyRegistry registry) {
         registry.add("ledger.db-path", () -> tempDir.resolve("settings.db").toString());
+        TestKeys.register(registry);
     }
 
     @Autowired

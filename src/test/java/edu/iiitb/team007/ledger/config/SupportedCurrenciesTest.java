@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 class SupportedCurrenciesTest {
 
     private static SupportedCurrencies of(List<String> codes) {
-        return new SupportedCurrencies(new LedgerProperties("x.db", "1", codes));
+        return new SupportedCurrencies(new LedgerProperties("x.db", "1", codes, List.of(), List.of()));
     }
 
     @Test

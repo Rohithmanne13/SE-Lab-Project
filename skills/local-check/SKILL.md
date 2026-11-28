@@ -26,7 +26,7 @@ Run it from the repository root. It needs JDK 21 and Python 3 (standard library 
    The script performs the five steps of SK-4 in order:
    1. **build** - `sh ./mvnw -B -DskipTests package` (Checkstyle lint included) produces `target/financial-ledger-api.jar`;
    2. **tests** - `sh ./mvnw -B test` and `python3 -m unittest discover -s tests`;
-   3. **server** - starts the jar on `127.0.0.1` and a free port with a fresh temporary database file, and waits up to 60 s until it answers;
+   3. **server** - starts the jar on `127.0.0.1` and a free port with a fresh temporary database file and throwaway random API keys (the service needs keys since Stage 3; they are never printed or logged, SEC-5), and waits up to 60 s until it answers;
    4. **fetch** - `GET /health` must return HTTP 200 with `"status":"ok"` and `"database":"ok"` (FR-6.4);
    5. **report** - one line per step, PASS / FAIL / SKIP; the server is always stopped.
 3. **Read the report.** The exit status is 0 only when every step passed. For a FAIL, open the log file named on the `report` line.
