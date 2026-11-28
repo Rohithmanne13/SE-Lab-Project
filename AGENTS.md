@@ -18,11 +18,13 @@ Instructions for AI coding agents (Claude Code, Copilot, Codex and similar) work
 | Path | Contents |
 |---|---|
 | `brain/` | Obsidian second-brain vault (PARA). Entry point `brain/index.md`; every skill run is logged in `brain/log.md`. |
-| `skills/<skill-name>/SKILL.md` | Agent Skills (SK-0). Current: `brain-ingest`, `brain-refine`, `brain-query`, `local-check`. Planned: `simulate-transfer` (Stage 3). |
+| `skills/<skill-name>/SKILL.md` | Agent Skills (SK-0): `brain-ingest`, `brain-refine`, `brain-query`, `local-check`, `simulate-transfer`. |
 | `src/main/java/edu/iiitb/team007/ledger/` | Service code, layered `api` -> `service` -> `persistence` with `domain`, `support`, `config` (CON-5, `docs/design/architecture.md`). |
-| `src/test/java/...` | JUnit 5 tests; each uses a fresh temporary database file (TQ-5). |
-| `scripts/ci/` | CI validators for the vault and the skills. |
-| `tests/` | Automated tests (regression tests for tooling now; product tests from Stage 3). |
+| `src/test/java/...` | JUnit 5 unit, integration, system, negative, precision, security and contract tests; fresh databases in the system temporary folder (TQ-5). Plan: `docs/testing/test-plan.md`. |
+| `scripts/ci/` | CI validators for the vault, the skills and the ADRs; the coverage report. |
+| `scripts/nfr/` | Load test (NFR-PERF-1-5) and crash test (NFR-SAFE-3/4, NFR-REL-2); results in `docs/testing/`. |
+| `docs/api/` | API contract `openapi.yaml` (source of truth for the API, SE-7) and the Postman collection (UI-2). |
+| `tests/` | Python tests of the skills, CI scripts, NFR helpers and API documentation (TQ-8). |
 | `docs/` | SRS, course material, design (`docs/design/`), ADRs (`docs/adr/`), development plan, traceability matrix, test documentation. |
 | `.github/workflows/ci.yml` | CI: build/lint/test, secret scan, SKILL.md validation, brain-note validation. |
 
@@ -36,10 +38,12 @@ python3 scripts/ci/validate_skills.py         # every SKILL.md: name, sections, 
 python3 -m unittest discover -s tests -v      # regression tests
 python3 skills/brain-ingest/scripts/check_note.py   # brain-ingest evaluation on inbox notes
 python3 scripts/ci/validate_adrs.py           # every ADR: sections and a distilled-note citation (SB-3)
-sh ./mvnw -B verify                             # service: Checkstyle, compile, tests, package (JDK 21; Maven via wrapper)
+sh ./mvnw -B verify                             # service: Checkstyle, compile, tests, coverage gate, package (JDK 21)
+python3 scripts/ci/coverage_summary.py          # line coverage per package after mvn verify (NFR-MAINT-2)
+python3 skills/simulate-transfer/scripts/simulate_transfer.py   # SK-5: full workflow against the built jar
 ```
 
-Run all of them before opening a pull request; CI runs the same checks.
+Run all of them before opening a pull request; CI runs the same checks. Every change to the API changes `docs/api/openapi.yaml` in the same pull request (`OpenApiContractTest` fails otherwise).
 
 ## Working with the brain (`brain/`)
 

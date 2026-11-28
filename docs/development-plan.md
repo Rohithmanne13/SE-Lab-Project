@@ -9,9 +9,9 @@ Every task becomes a GitHub Issue (PR-2) and is delivered through a reviewed pul
 | Member | Roll no. | GitHub |
 |---|---|---|
 | Manne Rohith Sai | BT2024144 | Rohithmanne13 |
-| Sunnapu Suhith Reddy | BT2024066 | _(add)_ |
-| Rudraraju Dhanush Varma | BT2024211 | _(add)_ |
-| Abhiram P B S | BT2024166 | _(add)_ |
+| Sunnapu Suhith Reddy | BT2024066 | suhithreddy07 |
+| Rudraraju Dhanush Varma | BT2024211 | RudrarajuDhanushvarma |
+| Abhiram P B S | BT2024166 | Bhargava180724 |
 
 ## Stage 1 - Requirements
 
@@ -49,15 +49,22 @@ Every task becomes a GitHub Issue (PR-2) and is delivered through a reviewed pul
 
 ## Stage 3 - Testing and CI
 
-| # | Task | Requirements |
-|---|---|---|
-| 3.1 | Implement FR-0 to FR-6, data requirements and business rules | FR-0-FR-6, DR-1-DR-7, BR-1-BR-9 |
-| 3.2 | Unit, integration, system, negative, precision and security tests | TQ-1-TQ-6, TQ-SEC |
-| 3.3 | Non-functional checks (performance, safety, security, quality attributes) | NFR-PERF, NFR-SAFE, SEC, NFR-REL, NFR-MAINT, NFR-PORT, NFR-USE, NFR-OBS |
-| 3.4 | simulate-transfer skill with test results | SK-5 |
-| 3.5 | Continuous testing and CI plan/results; defect log with regression tests | PR-5, TQ-8 |
-| 3.6 | User and API documentation (OpenAPI, user guide, client collection) | SE-7, UI-1, UI-2 |
-| 3.7 | Skill evaluations; Stage 3 review note | TQ-7, SB-2 |
+Split by team decision: about 60 % to Rohith (the product code and its tests) and 40 % to Suhith (test and CI plan,
+skill, API documentation, non-functional tests, wrap-up); each reviews and merges the other's pull requests.
+
+| # | Task | Requirements | Owner | Status |
+|---|---|---|---|---|
+| 3.1 | Ledger core: schema migration, domain, hash chain, providers, persistence, system funding accounts | SI-1-SI-4, DR-1-DR-7, FR-1.5, FR-4.2-FR-4.4, CON-5, SE-6, TQ-1 | Rohith (#37) | Done |
+| 3.2 | Continuous testing and CI plan; coverage gate; CI Maven cache | PR-5, TQ-5, NFR-MAINT-2 | Suhith (#38) | Done |
+| 3.3 | API foundation (keys, roles, request IDs, size limit, problem details, strict JSON, access log); users and wallets | FR-0, FR-1.1-FR-1.5, FR-1.9, FR-6.1, FR-6.2, NFR-OBS-1, SEC-1, SEC-4-SEC-7 | Rohith (#39) | Done |
+| 3.4 | Deposits, idempotent transfers, concurrency, transaction queries; integration, negative and precision tests | FR-1.6-FR-1.8, FR-2, FR-3, FR-6.3, TQ-1, TQ-2, TQ-4, TQ-6 | Rohith (#40) | Done |
+| 3.5 | Reversals and reconciliation; tamper and security tests | FR-4.1, FR-4.5-FR-4.7, FR-5, NFR-REL-1, NFR-REL-5, TQ-3, TQ-SEC | Rohith (#41) | Done |
+| 3.6 | OpenAPI contract and Swagger UI at /docs, contract test | SE-7, CON-4, UI-1, FR-0.2 | Suhith (#42) | Done |
+| 3.7 | simulate-transfer skill with test results; CI end-to-end step | SK-5, TQ-7 | Suhith (#43) | Done |
+| 3.8 | Load and crash tests with recorded results | NFR-PERF-1-NFR-PERF-5, NFR-SAFE-3, NFR-SAFE-4, NFR-REL-2 | Suhith (#44) | Done |
+| 3.9 | Usage guide, Postman collection, README, `.env.example` | SE-7, UI-2, NFR-USE-1, CON-9 | Suhith (#45) | Done |
+| 3.10 | Skill evaluations, test results, defect log, Stage 3 review note, traceability, changelog | TQ-7, TQ-8, SB-2, SE-4, SE-5, AI-3, PR-4 | Suhith (#46); review points Rohith (#41) | Done |
+| 3.11 | Release `v0.3.0` | PR-4 | Rohith (#47) | After merge |
 
 ## Stage 4 - Review
 

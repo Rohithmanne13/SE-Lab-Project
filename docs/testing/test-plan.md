@@ -64,6 +64,53 @@ A failing test or a wrong result is a defect: open a GitHub Issue labelled `bug`
 test that fails, fix the code, and close the Issue from the pull request that adds the fix and the test. The pull
 request also adds a row to `defect-log.md`.
 
-## 7. Results
+## 7. Results (Stage 3)
 
-_Filled in at the end of Stage 3 (wrap-up)._
+Recorded at the Stage 3 wrap-up (#46) from `sh ./mvnw -B verify`, `python3 -m unittest discover -s tests` and the
+scripts named below; the same numbers appear in every CI run of the final `main`.
+
+### Java tests - 166 in 42 classes, all PASS
+
+| Level | Test classes | Tests |
+|---|---|---|
+| Unit | `domain` (ErrorCodeTest, MoneyAndLedgerMathTest), `support` (Sha256, HashChain, RequestFingerprint, CanonicalJson, UuidsAndTimestamps), `config` (ApiKeys, SupportedCurrencies), `api.PagingTest`, `service.PostingServiceTest`, `inspection.MoneyTypesInspectionTest` | 39 |
+| Integration | `persistence` (TransactionRunner, MigrationRunner, SchemaConstraints, SqlScript, Repositories, SqliteConnectionSettings), `service.SystemAccountsTest`, `testsupport.TestDatabaseTest`, `api.FaultInjectionTest`, `api.BusyApiTest` | 37 |
+| System (HTTP) | Users, Wallets, Deposit, Transfer, Idempotency, Concurrency, Transactions, Reversal, Reconciliation, TamperDetection, AmountLimit, Precision, Security, CrossCutting, AccessLog, Health (2 classes), Docs (2 classes) | 84 |
+| Contract | `api.OpenApiContractTest` | 6 |
+
+Every system test ended with a reconciliation report of PASSED (NFR-REL-1). The FR-3.4 test (20 x 100 from 1000)
+always gave exactly 10 x 201 and 10 x 422 with a final balance of 0; the FR-3.5 test (2 x 600 from 1000) exactly one
+success and a final balance of 400.
+
+### Line coverage (JaCoCo, NFR-MAINT-2) - gate met
+
+| Package | Lines covered | Line coverage | Gate |
+|---|---|---|---|
+| `service` | 323/335 | 96.4 % | >= 80 % PASS |
+| `domain` | 72/72 | 100.0 % | >= 80 % PASS |
+| `persistence` | 234/254 | 92.1 % | >= 80 % PASS |
+| `api` | 327/354 | 92.4 % | - |
+| `config` | 80/80 | 100.0 % | - |
+| `support` | 24/28 | 85.7 % | - |
+
+### Python tests - 57, all PASS
+
+`test_brain_tools` 8, `test_brain_refine` 7, `test_brain_query` 7, `test_local_check` 8, `test_validate_adrs` 5,
+`test_coverage_summary` 4, `test_simulate_transfer` 8, `test_nfr_tools` 6, `test_api_docs` 4.
+
+### Continuous integration
+
+Every Stage 3 pull request (issues #37 to #46) was merged only with all four required jobs green; the job summary of
+each "build, lint, test" run shows the coverage table, and its last step prints the simulate-transfer report
+(5/5 steps, reconciliation PASSED). Secret scanning found nothing (SEC-8).
+
+### Non-functional requirements
+
+- Performance (NFR-PERF-1 to NFR-PERF-5): `performance-results.md`, from `python3 scripts/nfr/load_test.py`.
+- Crash safety and recovery (NFR-SAFE-3, NFR-SAFE-4, NFR-REL-2): `crash-test-results.md`, from
+  `python3 scripts/nfr/crash_test.py`.
+
+### Skills and defects
+
+- Skill evaluations of all five skills: `skill-evaluations.md`, Stage 3 section (TQ-7).
+- Defects D1-D5, each with its Issue and regression test: `defect-log.md` (TQ-8).

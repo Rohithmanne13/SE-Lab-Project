@@ -14,7 +14,7 @@
 
     <groupId>edu.iiitb.team007</groupId>
     <artifactId>financial-ledger-api</artifactId>
-    <version>0.2.0</version>
+    <version>0.3.0</version>
     <name>Financial Ledger and Digital Wallet API</name>
     <description>Team 007, Software Engineering Lab, IIIT Bangalore</description>
 
