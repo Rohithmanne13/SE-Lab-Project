@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Financial Ledger & Digital Wallet API
-  version: 0.2.0
+  version: 0.3.0
   summary: Per-currency wallets, idempotent transfers and a tamper-evident double-entry ledger on SQLite.
   description: |
     REST API of Team 007's Financial Ledger & Digital Wallet service (SE Lab, IIIT Bangalore), release 1.0 scope

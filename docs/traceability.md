@@ -56,24 +56,43 @@ PR numbers are linked from each closed issue.
 | AI-3 ai-session notes | #27 | I: `ai-session-2026-11-23-stage-2-preparation` | - | `ai-session-2026-11-23-stage-2-preparation` |
 | PR-4 release | #28 | I: `CHANGELOG.md` 0.2.0, tag `v0.2.0` | - | `keep-a-changelog`, `semantic-versioning` |
 
+## Stage 3 deliverables
+
+PR numbers are linked from each closed issue. Test names are JUnit classes in `src/test/java/edu/iiitb/team007/ledger/`
+unless a path is given.
+
+| Requirement | Issue | Test / verification | Skill | Brain note / document |
+|---|---|---|---|---|
+| SB-2 stage review note | #41, #46 | I: `stage-3-review` | - | `stage-3-review` |
+| TQ-7 skill evaluations | #46 | I: `docs/testing/skill-evaluations.md` Stage 3 | all five skills | - |
+| TQ-8 defect log with regression tests | #48-#52 | I: `docs/testing/defect-log.md`; T: the regression test named in each row | - | `stage-3-review` |
+| PR-5, TQ-5 continuous testing and CI plan/results | #38, #46 | I: `docs/testing/test-plan.md`; T: CI jobs on every push and pull request | - | - |
+| NFR-MAINT-2 coverage reported by CI | #38 | T: JaCoCo gate in `mvn verify`; `scripts/ci/coverage_summary.py`, `tests/test_coverage_summary.py` | - | - |
+| SK-5 simulate-transfer with results | #43 | T: `simulate_transfer.py` run (CI and `--by`), `tests/test_simulate_transfer.py` | simulate-transfer | `agent-skills-format`, `sqlite-transactions` |
+| SE-7, UI-1 OpenAPI and Swagger UI | #42 | T: `api/OpenApiContractTest`, `api/DocsApiTest`, `api/DocsDisabledTest` | - | `openapi-specification-3-1` |
+| UI-2 client collection | #45 | T: `tests/test_api_docs.py`; D: every request run against the service | - | - |
+| NFR-USE-1 README, user guide | #45 | I: `README.md`, `docs/user-guide.md` | local-check | - |
+| AI-3 ai-session note | #41 | I: `ai-session-2026-11-28-stage-3-build` | - | `ai-session-2026-11-28-stage-3-build` |
+| PR-4 release | #47 | I: `CHANGELOG.md` 0.3.0, tag `v0.3.0` | - | `keep-a-changelog`, `semantic-versioning` |
+
 ## Product and quality requirements (seeded from SRS Appendix D)
 
-| Requirement | Method | Issue | PR | Test / verification | Skill | Brain note |
-|---|---|---|---|---|---|---|
-| FR-0.1 - FR-0.5 | T | | | Unit + system tests; negative tests for 401/403/400/413/415 | local-check | `rfc-9457-problem-details` |
-| FR-1.1 - FR-1.9 | T, D | | | Unit (ledger balance); system E2E for FR-1 (TQ-3); negative tests (TQ-4) | simulate-transfer (1-2) | `project-statement-financial-ledger` |
-| FR-2.1 - FR-2.10 | T, D | | | Unit (fingerprint hashing, TQ-1); integration (atomic key record, TQ-2); E2E (TQ-3); negative (TQ-4) | simulate-transfer (3) | `idempotency-key-header-draft` |
-| FR-3.1 - FR-3.6 | T, D | | | Concurrent system tests FR-3.4/FR-3.5 (TQ-4); integration test of lock timeout | simulate-transfer (4) | `sqlite-transactions`, `sqlite-file-locking` |
-| FR-4.1 - FR-4.7 | T, I | | | Integration: UPDATE/DELETE blocked by triggers; hash-chain unit tests; reversal E2E (TQ-3) | - | `project-statement-financial-ledger` |
-| FR-5.1 - FR-5.7 | T, D | | | System E2E; tamper test (modify a row with triggers disabled -> FAILED report) | simulate-transfer (5) | `sqlite-write-ahead-logging` |
-| FR-6.1 - FR-6.5 | T | | | System tests; pagination tests | local-check (4) | - |
-| NFR-PERF-1 - 5 | T, A | | | Load-test script results recorded in test documentation | - | - |
-| NFR-SAFE-1 - 5 | T | | | Reconciliation after every test; fault-injection tests (TQ-2) | simulate-transfer | `sqlite-file-locking` |
-| SEC-1 - SEC-9 | T, I | | | Security tests (TQ-SEC); CI secret scanning; code review; dependency-version inspection | - | - |
-| NFR-REL / MAINT / PORT / USE / OBS | T, I, D | | | TQ-6 precision tests; CI coverage report; local-check on all OSs; README walkthrough; log inspection | local-check | `sqlite-write-ahead-logging` |
-| OE, CON, AS, UI, SI, CI | I, T | | | Configuration and code inspection; interfaces covered by FR system tests | local-check | `sqlite-transactions` |
-| SK-0 - SK-5 | D, T | | | Skill evaluations (TQ-7); CI SKILL.md validation | each skill | `agent-skills-format` |
-| TQ-1 - TQ-8, TQ-SEC | I | | | CI run history, test reports, defect log | - | `project-statement-financial-ledger` |
-| SB-0 - SB-6, DR-8 | I | | | Vault structure, CI note validation, commit history, review notes | brain-ingest / refine / query | `second-brain-workflow` |
-| SE-1 - 7, PR-1 - 5, AI-1 - 4 | I | | | Repository inspection: docs, ADRs, issues, PRs, reviews, tags, ai-session notes | - | `sdlc-and-workflow` |
-| DR-1 - DR-7, BR-1 - BR-9 | T, I | | | Schema inspection; constraint tests; reconciliation | simulate-transfer | - |
+| Requirement | Method | Issue | Test / verification | Skill | Brain note |
+|---|---|---|---|---|---|
+| FR-0.1 - FR-0.5 | T | #39, #42 | `api/CrossCuttingApiTest`, `api/SecurityApiTest`, `api/AccessLogTest`, `config/ApiKeysTest`; negative tests for 401/403/400/413/415 | local-check | `rfc-9457-problem-details` |
+| FR-1.1 - FR-1.9 | T, D | #37, #39, #40 | `api/UsersApiTest`, `api/WalletsApiTest`, `api/DepositApiTest`, `service/SystemAccountsTest`, `domain/MoneyAndLedgerMathTest`, `service/PostingServiceTest` | simulate-transfer (1-2) | `project-statement-financial-ledger` |
+| FR-2.1 - FR-2.10 | T, D | #40 | `support/RequestFingerprintTest`, `support/CanonicalJsonTest` (TQ-1); `api/FaultInjectionTest` (TQ-2); `api/TransferApiTest`, `api/IdempotencyApiTest` (TQ-3, TQ-4) | simulate-transfer (3) | `idempotency-key-header-draft` |
+| FR-3.1 - FR-3.6 | T, D | #37, #40 | `api/ConcurrencyApiTest` (FR-3.4, FR-3.5), `api/BusyApiTest`, `persistence/TransactionRunnerTest` (lock timeout) | simulate-transfer (4) | `sqlite-transactions`, `sqlite-file-locking` |
+| FR-4.1 - FR-4.7 | T, I | #37, #41 | `persistence/SchemaConstraintsTest` (triggers), `support/HashChainTest`, `api/ReversalApiTest`, `api/TransactionsApiTest` (no PUT/PATCH/DELETE) | - | `project-statement-financial-ledger` |
+| FR-5.1 - FR-5.7 | T, D | #41 | `api/ReconciliationApiTest`, `api/TamperDetectionApiTest` (rows changed with triggers dropped -> FAILED) | simulate-transfer (5) | `sqlite-write-ahead-logging` |
+| FR-6.1 - FR-6.5 | T | #25, #39, #40 | `api/WalletsApiTest`, `api/TransactionsApiTest` (pagination), `api/HealthEndpointTest`, `api/HealthControllerDegradedTest`, `persistence/TransactionRunnerTest` (reader snapshot) | local-check (4) | - |
+| NFR-PERF-1 - 5 | T, A | #44 | `scripts/nfr/load_test.py`, results `docs/testing/performance-results.md`; `api/ConcurrencyApiTest` (NFR-PERF-3) | - | - |
+| NFR-SAFE-1 - 5 | T | #40, #41, #44 | reconciliation after every system test; `api/FaultInjectionTest` (TQ-2); `scripts/nfr/crash_test.py`, results `docs/testing/crash-test-results.md`; `persistence/SqliteConnectionSettingsTest` (synchronous FULL) | simulate-transfer | `sqlite-file-locking` |
+| SEC-1 - SEC-9 | T, I | #39, #41 | `api/SecurityApiTest` (TQ-SEC), `api/CrossCuttingApiTest`, `api/AccessLogTest`, `config/ApiKeysTest`; CI secret scanning; dependency versions in `pom.xml` | - | - |
+| NFR-REL / MAINT / PORT / USE / OBS | T, I, D | #38, #40, #41, #44, #45 | `api/PrecisionApiTest`, `api/AmountLimitApiTest`, `inspection/MoneyTypesInspectionTest` (TQ-6); `api/ReconciliationApiTest` (NFR-REL-5); JaCoCo gate (NFR-MAINT-2); local-check on every member's machine (NFR-PORT-1); README (NFR-USE-1); `api/AccessLogTest` (NFR-OBS-1) | local-check | `sqlite-write-ahead-logging` |
+| OE, CON, AS, UI, SI, CI | I, T | #37, #39, #42 | `persistence/SqliteConnectionSettingsTest` (SI-2), `persistence/MigrationRunnerTest` (SI-4), `api/OpenApiContractTest` (CON-4), `api/DocsApiTest` (UI-1), `api/CrossCuttingApiTest` (CI-3, CI-4) | local-check | `sqlite-transactions` |
+| SK-0 - SK-5 | D, T | #43, #46 | Skill evaluations (TQ-7); CI SKILL.md validation | each skill | `agent-skills-format` |
+| TQ-1 - TQ-8, TQ-SEC | I | #38, #46 | `docs/testing/test-plan.md` (levels and results), CI run history, `docs/testing/defect-log.md` | - | `project-statement-financial-ledger` |
+| SB-0 - SB-6, DR-8 | I | #41, #46 | Vault structure, CI note validation, commit history, review notes | brain-ingest / refine / query | `second-brain-workflow` |
+| SE-1 - 7, PR-1 - 5, AI-1 - 4 | I | #37-#47 | Repository inspection: docs, ADRs, issues, PRs, reviews, tags, ai-session notes | - | `sdlc-and-workflow` |
+| DR-1 - DR-7, BR-1 - BR-9 | T, I | #37, #40, #41 | `persistence/SchemaConstraintsTest`, `persistence/MigrationRunnerTest`, `service/PostingServiceTest`; reconciliation | simulate-transfer | - |

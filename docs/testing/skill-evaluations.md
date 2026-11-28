@@ -2,6 +2,60 @@
 
 Test documentation for SRS **TQ-7**: skill evaluations run before each stage submission. Each skill's `## Evaluation` section defines its checks; results are recorded here, newest first.
 
+## Stage 3 - all skills
+
+- **Date:** Stage 3 submission (#46)
+- **Overall:** PASS
+
+### simulate-transfer (SK-5)
+
+| Run | Result |
+|---|---|
+| Sunnapu Suhith Reddy, own machine, 2026-11-28 (`--by`) | PASS 5/5 steps, reconciliation PASSED |
+| CI, job "build, lint, test", every push and pull request | PASS 5/5 steps, reconciliation PASSED (job summary of each run) |
+| `python3 -m unittest tests.test_simulate_transfer` | PASS - 8 tests: a correct API passes; a retried transfer posted twice fails step 3; two concurrent transfers both let through fail step 4; a FAILED reconciliation fails step 5; a setup failure stops the run; unknown member, missing keys and missing jar are rejected |
+
+Balances of every run (minor units): source 100000 and destination 0 at the start, 75000 and 25000 after the
+idempotent transfer and its replay, 25000 and 75000 at the end. SK-5 acceptance (all steps PASS and reconciliation
+PASSED): **met**.
+
+### local-check (SK-4)
+
+| Member | OS | Result |
+|---|---|---|
+| Manne Rohith Sai | Linux 6.18.58.1-microsoft-standard-WSL2 | PASS 5/5 steps - build, tests, server, `GET /health` 200, report (2026-11-28) |
+| Sunnapu Suhith Reddy | Linux 6.18.58.1-microsoft-standard-WSL2 | PASS 5/5 steps - build, tests, server, `GET /health` 200, report (2026-11-28) |
+| Rudraraju Dhanush Varma | Linux 6.9.3-76060903-generic | PASS 5/5 steps (Stage 2 run, below) |
+| Abhiram P B S | Linux 6.18.58.1-microsoft-standard-WSL2 | PASS 5/5 steps (Stage 2 run, below) |
+
+Since Stage 3 the service needs API keys; local-check starts it with throwaway random keys (defect D2, #49).
+`python3 -m unittest tests.test_local_check` - PASS, 8 tests. SK-4 acceptance (passes on every member's machine):
+**met** for all four members (NFR-PORT-1).
+
+### brain-ingest (SK-1), brain-refine (SK-2), brain-query (SK-3)
+
+| Check | Result |
+|---|---|
+| brain-ingest: `python3 -m unittest tests.test_brain_tools` | PASS - 8 tests; no research notes were added in Stage 3 and the inbox is empty |
+| brain-refine: `refine.py check` | PASS - inbox empty, 0 broken links (SK-2 acceptance) |
+| brain-query: `eval_query.py` - 15 fixed questions | PASS - 15/15 with the two new Stage 3 notes in the vault (an expected note in the top 3, all in the top 5) |
+| brain-query: logged query | "What happens when BEGIN IMMEDIATE cannot get the write lock?" - cited `srs-requirements`, `sqlite-transactions` (answer: SQLITE_BUSY after the busy timeout, mapped to 503 SERVICE_BUSY, FR-3.6) |
+| `python3 -m unittest tests.test_brain_refine tests.test_brain_query` | PASS - 14 tests |
+
+### Supporting checks
+
+| Check | Result |
+|---|---|
+| `validate_skills.py` | PASS - 5 skills |
+| `validate_adrs.py` | PASS - 4 ADRs |
+| `validate_brain.py` | PASS - 28 notes, 0 errors |
+| `sh ./mvnw -B verify` | PASS - 0 Checkstyle violations, 166 tests, coverage gate met (service 96.4 %, domain 100 %, persistence 92.1 %) |
+| `python3 -m unittest discover -s tests` | PASS - 57 tests |
+
+### Defects found during Stage 3
+
+Five, D1-D5 (issues #48-#52), each closed with a regression test - see `defect-log.md`.
+
 ## Stage 2 - all skills
 
 - **Date:** Stage 2 submission (each member adds their local-check run to the table below)
