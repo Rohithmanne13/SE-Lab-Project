@@ -6,13 +6,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import edu.iiitb.team007.ledger.service.SystemAccounts;
 import edu.iiitb.team007.ledger.persistence.TransactionRunner;
 import edu.iiitb.team007.ledger.testsupport.ApiClient;
-import edu.iiitb.team007.ledger.testsupport.ApiTestSupport;
+import edu.iiitb.team007.ledger.testsupport.IntegrationTestSupport;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /** System tests of wallets through HTTP (FR-1.3, FR-1.4, FR-1.5, FR-1.9, FR-6.1, FR-6.2, TQ-3, TQ-4). */
-class WalletsApiTest extends ApiTestSupport {
+class WalletsApiTest extends IntegrationTestSupport {
 
     @Autowired
     private SystemAccounts systemAccounts;

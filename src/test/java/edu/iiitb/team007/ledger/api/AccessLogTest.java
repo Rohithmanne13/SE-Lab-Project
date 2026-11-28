@@ -8,7 +8,7 @@ import ch.qos.logback.core.read.ListAppender;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.iiitb.team007.ledger.testsupport.ApiClient;
-import edu.iiitb.team007.ledger.testsupport.ApiTestSupport;
+import edu.iiitb.team007.ledger.testsupport.IntegrationTestSupport;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
 
 /** One structured JSON log line per request, without keys or bodies (NFR-OBS-1, SEC-7). */
-class AccessLogTest extends ApiTestSupport {
+class AccessLogTest extends IntegrationTestSupport {
 
     private final ObjectMapper mapper = new ObjectMapper();
     private final Logger access = (Logger) LoggerFactory.getLogger("ledger.access");

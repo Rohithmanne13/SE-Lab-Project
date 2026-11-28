@@ -3,11 +3,11 @@ package edu.iiitb.team007.ledger.api;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import edu.iiitb.team007.ledger.testsupport.ApiClient;
-import edu.iiitb.team007.ledger.testsupport.ApiTestSupport;
+import edu.iiitb.team007.ledger.testsupport.IntegrationTestSupport;
 import org.junit.jupiter.api.Test;
 
 /** System test of GET /health through real HTTP, against the isolated test database (FR-6.4, TQ-3, TQ-5). */
-class HealthEndpointTest extends ApiTestSupport {
+class HealthEndpointTest extends IntegrationTestSupport {
 
     @Test
     void healthIsOkWithVersionWhenDatabaseIsUsable() {
