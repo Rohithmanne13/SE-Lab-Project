@@ -17,20 +17,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: No application code yet
-        if: hashFiles('pom.xml') == ''
-        run: |
-          echo "::notice::No pom.xml yet. The implementation language and build tool are decided in a Stage 2 ADR (SRS CON-6);"
-          echo "::notice::this job then builds, lints and runs the tests against an isolated database (TQ-5)."
-      - name: Set up JDK
-        if: hashFiles('pom.xml') != ''
+      - name: Set up JDK (with a cache of the Maven downloads)
         uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
         with:
           distribution: temurin
           java-version: "21"
-      - name: Build, lint and test
-        if: hashFiles('pom.xml') != ''
+          cache: maven
+      - name: Build, lint, test on an isolated database, coverage gate (TQ-5, NFR-MAINT-2)
         run: mvn -B -ntp verify
+      - name: Coverage report (NFR-MAINT-2)
+        if: always()
+        run: python3 scripts/ci/coverage_summary.py target/site/jacoco/jacoco.csv
 
   secret-scan:
     name: secret scan
