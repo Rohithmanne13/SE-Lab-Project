@@ -93,8 +93,8 @@ Five, D1-D5 (issues #48-#52), each closed with a regression test - see `defect-l
 |---|---|---|
 | Rudraraju Dhanush Varma | Linux 6.9.3-76060903-generic | PASS 5/5 steps - build, tests, server, `GET /health` 200, report |
 | Abhiram P B S | Linux 6.18.58.1-microsoft-standard-WSL2 | PASS 5/5 steps - build, tests, server, `GET /health` 200, report |
-| Sunnapu Suhith Reddy | _add your run_ | |
-| Manne Rohith Sai | _add your run_ | |
+| Sunnapu Suhith Reddy | Linux 6.18.58.1-microsoft-standard-WSL2 | Not run in Stage 2; PASS 5/5 steps in Stage 3 (2026-11-28) - see the Stage 3 section above |
+| Manne Rohith Sai | Linux 6.18.58.1-microsoft-standard-WSL2 | Not run in Stage 2; PASS 5/5 steps in Stage 3 (2026-11-28) - see the Stage 3 section above |
 
 `python3 -m unittest tests.test_local_check` - PASS, 7 tests.
 
